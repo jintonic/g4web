@@ -1,0 +1,19 @@
+{
+    "name": "geant4-web-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Geant4 Web UI and Physics Core Monorepo",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "npm run dev --workspace geant4-ui",
+        "build": "npm run build --workspaces",
+        "test": "npm run test --workspaces",
+        "sync-three": "git submodule update --remote --merge"
+    },
+    "devDependencies": {
+        "vite": "^6.0.0",
+        "prettier": "^3.0.0"
+    }
+}
