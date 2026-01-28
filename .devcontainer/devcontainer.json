@@ -16,7 +16,7 @@
     // - Initializes the submodule
     // - Sets up sparse checkout to save space (build and editor only)
     // - Installs all npm dependencies for the monorepo workspaces
-    "postCreateCommand": "git submodule update --init --depth 1 && cd threejs && git sparse-checkout set build examples/editor examples/jsm && cd .. && npm install",
+    "postCreateCommand": "bash co3js.sh && npm install",
     // 4. VS Code Customizations
     "customizations": {
         "vscode": {
