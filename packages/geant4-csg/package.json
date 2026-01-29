@@ -1,0 +1,29 @@
+{
+  "name": "@chitrashensah/geant4-csg",
+  "version": "0.1.0",
+  "description": "Geant4 constructive solid geometry (CSG) implementation for Three.js",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./utils": "./src/utils.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "prettier --check ."
+  },
+  "keywords": [
+    "geant4",
+    "csg",
+    "threejs",
+    "geometry"
+  ],
+  "author": "https://github.com/chitrashensah",
+  "license": "AGPL-3.0-only",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "three": ">=0.150.0"
+  }
+}
