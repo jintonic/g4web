@@ -1,19 +1,26 @@
 {
-    "name": "geant4-web-monorepo",
-    "version": "1.0.0",
-    "private": true,
-    "description": "Geant4 Web UI and Physics Core Monorepo",
-    "workspaces": [
-        "packages/*"
-    ],
-    "scripts": {
-        "dev": "npm run dev --workspace geant4-ui",
-        "build": "npm run build --workspaces",
-        "test": "npm run test --workspaces",
-        "sync-three": "git submodule update --remote --merge"
-    },
-    "devDependencies": {
-        "vite": "^6.0.0",
-        "prettier": "^3.0.0"
-    }
+  "name": "geant4-web-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Geant4 Web UI and Physics Core Monorepo",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace geant4-ui",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "sync-three": "git submodule update --remote --merge",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "prettier": "3.8.1",
+    "vite": "^6.0.0"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
 }
