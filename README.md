@@ -15,18 +15,20 @@ git submodule update --init
 # 3. set sparse checkout and shallow clone in .git/config
 git config submodule."vendor/threejs".sparseCheckout true
 git config submodule."vendor/threejs".shallow true
-# only include things needed by editor
+# only checkout the editor folder
 cd vendor/threejs
-git sparse-checkout set --no-cone '/*' '!/*/' '/build/' '/editor/' '/examples/' '!/examples/*' '!/examples/*/' '/examples/jsm/' '/examples/models/' '!/examples/models/*/' '/examples/models/ldraw/'
+git sparse-checkout set editor 'examples/jsm/environments/'
 ```
 
 The stable release of [threejs][] is the tip of its `master` branch, which is buried deep by new commits in the `dev` branch, and cannot be reached by a shallow clone. If we replace `--depth 1` with `-b master`, we will be forced to download the entire history of [threejs][] (> 1GB). `--depth 1` shallow clones the tip of the `dev` branch, which may not be stable. We just hope that the [editor][] part is stable enough.
 
-To pull the latest stable changes from the master branch:
+To pull the latest changes from the [threejs][] repo:
+
 ```bash
-git submodule update --remote --merge
-# Then commit the new pointer in the main repo
+git submodule update --remote
 ```
+
+then commit the new pointer in the main repo.
 
 To populate `vendor/threejs` in a newly cloned repository in another machine, skip step 1 and change step 2 to:
 
