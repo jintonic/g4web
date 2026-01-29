@@ -12,6 +12,7 @@
     "test": "npm run test --workspaces",
     "sync-three": "git submodule update --remote --merge",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky"
   },
   "devDependencies": {
