@@ -1,0 +1,49 @@
+/* Layout Container */
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #111;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+/* The Transparent Overlay for Geant4 Controls */
+#g4-gui-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000; /* Sit above the 3D Viewport */
+  pointer-events: none; /* Let clicks pass through to the 3D scene */
+}
+
+/* Interactive elements inside the overlay */
+.g4-panel {
+  position: absolute;
+  background: rgba(45, 45, 45, 0.9);
+  color: #eee;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  pointer-events: auto; /* Re-enable clicks for buttons/inputs */
+}
+
+#g4-status-bar {
+  top: 40px; /* Offset to stay below the Editor Menubar */
+  left: 10px;
+  width: 250px;
+}
+
+.g4-button {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.g4-button:hover {
+  background: #005a9e;
+}
