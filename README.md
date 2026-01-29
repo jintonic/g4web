@@ -22,6 +22,12 @@ git sparse-checkout set --no-cone '/*' '!/*/' '/build/' '/editor/' '/examples/' 
 
 The stable release of [threejs][] is the tip of its `master` branch, which is buried deep by new commits in the `dev` branch, and cannot be reached by a shallow clone. If we replace `--depth 1` with `-b master`, we will be forced to download the entire history of [threejs][] (> 1GB). `--depth 1` shallow clones the tip of the `dev` branch, which may not be stable. We just hope that the [editor][] part is stable enough.
 
+To pull the latest stable changes from the master branch:
+```bash
+git submodule update --remote --merge
+# Then commit the new pointer in the main repo
+```
+
 To populate `vendor/threejs` in a newly cloned repository in another machine, skip step 1 and change step 2 to:
 
 ```bash
