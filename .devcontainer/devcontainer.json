@@ -1,40 +1,38 @@
 {
-    "name": "Geant4 Three.js Monorepo",
-    // 1. Point to your local Dockerfile
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
-    // 2. Install Git as a formal 'Feature'
-    "features": {
-        "ghcr.io/devcontainers/features/git:1": {
-            "version": "latest"
-        }
-    },
-    // 3. Automated Setup Pipeline
-    // This command runs once the container is created:
-    // - Initializes the submodule
-    // - Sets up sparse checkout to save space (build and editor only)
-    // - Installs all npm dependencies for the monorepo workspaces
-    "postCreateCommand": "bash co3js.sh && npm install",
-    // 4. VS Code Customizations
-    "customizations": {
-        "vscode": {
-            "settings": {
-                // Ensures the container uses the integrated bash shell
-                "terminal.integrated.defaultProfile.linux": "bash"
-            },
-            "extensions": [
-                "dbaeumer.vscode-eslint",
-                "esbenp.prettier-vscode",
-                "mrdoob.threejs-extension",
-                "christian-kohler.path-intellisense"
-            ]
-        }
-    },
-    // 5. User & Network
-    "remoteUser": "node",
-    "forwardPorts": [
-        3000
-    ]
+  "name": "Geant4 Three.js Monorepo",
+  // 1. Point to your local Dockerfile
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  // 2. Install Git as a formal 'Feature'
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+  // 3. Automated Setup Pipeline
+  // This command runs once the container is created:
+  // - Initializes the submodule
+  // - Sets up sparse checkout to save space (build and editor only)
+  // - Installs all npm dependencies for the monorepo workspaces
+  "postCreateCommand": "bash co3js.sh && npm install",
+  // 4. VS Code Customizations
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Ensures the container uses the integrated bash shell
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "mrdoob.threejs-extension",
+        "christian-kohler.path-intellisense"
+      ]
+    }
+  },
+  // 5. User & Network
+  "remoteUser": "node",
+  "forwardPorts": [3000]
 }
