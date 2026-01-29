@@ -6,10 +6,17 @@
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "@chitrashensah/geant4-csg": "*",
+    "signals": "^1.0.0",
+    "three": "mrdoob/three.js#dev",
+    "three-gpu-pathtracer": "^0.0.23"
+  },
   "scripts": {
-    "dev": "npm run dev --workspace geant4-ui",
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "npm run test --workspaces --if-present",
     "sync-three": "git submodule update --remote --merge",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -19,7 +26,7 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.8.1",
-    "vite": "^6.0.0"
+    "vite": "^6.4.1"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
