@@ -1,4 +1,4 @@
-# Contributing to [Project Name]
+# Contributing to Geant4 Web UI
 
 Thank you for your interest in contributing! To maintain code quality and consistency, please follow these guidelines.
 
@@ -15,13 +15,41 @@ We use `package-lock.json` to ensure deterministic builds across all environment
 
 We use **Prettier** to enforce a consistent coding style.
 
-- **Automated Formatting:** Run `npm run format` before committing your changes.
+- **Automated Formatting:** We use Git hooks to format code automatically (see _Tooling & Automation_ below), but you can also run `npm run format` manually.
 - **Vendor Code:** Do not format files in the `vendor/` directory. These are excluded via `.prettierignore` to prevent merge conflicts with upstream libraries like Three.js.
 
-We have included a .vscode/ configuration folder. If you are using VS Code, Antigravity, or Cursor, the editor will automatically adopt our formatting standards and suggest the required extensions.
+---
+
+## 🛠 Tooling & Automation
+
+We use automated tools to ensure high code quality with minimal manual effort.
+
+### 1. Editor Setup (VS Code / Antigravity / Cursor)
+
+We have included a `.vscode/` configuration folder in this repository. When you open the project in a supported editor:
+
+- **Format on Save:** This is enabled automatically for this workspace.
+- **Recommended Extensions:** You will be prompted to install the **Prettier** extension if it is not already active.
+
+### 2. Git Hooks (Husky & lint-staged)
+
+To prevent unformatted code from entering the repository, we use Git hooks:
+
+- **How it works:** When you run `git commit`, a "pre-commit" hook automatically runs Prettier on **only** the files you have staged (`git add`).
+- **Syntax Safety:** If a commit fails, it is likely because Prettier encountered a syntax error it couldn't parse. Fix the error in your code and try the commit again.
+
+### 3. Continuous Integration (GitHub Actions)
+
+Every Pull Request is automatically checked by a GitHub Action. If local hooks were bypassed (e.g., using `--no-verify`), the **Code Quality** check on GitHub will fail, and the PR cannot be merged until formatting is corrected.
+
+---
 
 ## Pull Request Process
 
-1. Ensure all dependencies are correctly listed in `package.json`.
-2. Verify that your code passes the Prettier check (`npx prettier --check .`).
-3. Update the documentation if you are introducing new features or changing existing workflows.
+1. **Sync Dependencies:** Ensure all dependencies are correctly listed in `package.json` and `package-lock.json`.
+2. **Quality Check:** Verify that your code passes the Prettier check by running:
+   ```bash
+   npx prettier --check .
+   # or
+   npm run format:check
+   ```
