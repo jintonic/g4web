@@ -1,45 +1,16 @@
-Geant4 Web UI
+A web-based userinterface for Geant4 detector definition built on the official Three.js Editor.
 
-## For Developers
+## Getting Started
 
-[threejs][] is included as a submodule in the `vendor/threejs` directory to avoid manually adding 10s of MB files in [threejs][]`/{editor,build,examples}` folders to this repository. The following commands were used to initialize the submodule:
+1. Clone the repository with submodules:
+   `git clone --recursive <repo-url>`
+2. Install dependencies:
+   `npm install`
+3. Start the development server:
+   `npm run dev`
 
-```bash
-# 1. shallow clone three.js (~370MB still...) into .git/modules/vendor/threejs
-# a working copy is created in vendor/threejs
-# .gitmodules is created to record the url and working copy path of the submodule
-git submodule add --depth 1 https://github.com/mrdoob/three.js.git vendor/threejs
-# 2. populate vendor/threejs
-# --init: copy settings in .gitmodules (shared) to .git/config (local)
-git submodule update --init
-# 3. set sparse checkout and shallow clone in .git/config
-git config submodule."vendor/threejs".sparseCheckout true
-git config submodule."vendor/threejs".shallow true
-# only checkout the editor folder
-cd vendor/threejs
-git sparse-checkout set editor 'examples/jsm/environments/'
-```
+## Development and Customization
 
-The stable release of [threejs][] is the tip of its `master` branch, which is buried deep by new commits in the `dev` branch, and cannot be reached by a shallow clone. If we replace `--depth 1` with `-b master`, we will be forced to download the entire history of [threejs][] (> 1GB). `--depth 1` shallow clones the tip of the `dev` branch, which may not be stable. We just hope that the [editor][] part is stable enough.
+This project uses a non-destructive customization approach to remain compatible with upstream Three.js updates.
 
-To pull the latest changes from the [threejs][] repo:
-
-```bash
-git submodule update --remote
-```
-
-then commit the new pointer in the main repo.
-
-To populate `vendor/threejs` in a newly cloned repository in another machine, skip step 1 and change step 2 to:
-
-```bash
-# --recommend-shallow: fetch only the history needed to reach the recorded commit
-git submodule update --init --recommend-shallow
-```
-
-The rest steps are the same.
-
-The same setting is also applied to the submodule in the devcontainer through the [.devcontainer/co3js.sh](.devcontainer/co3js.sh) script and the `postCreateCommand` in the [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json) file.
-
-[threejs]: https://github.com/mrdoob/three.js
-[editor]: https://github.com/mrdoob/three.js/tree/dev/editor
+**Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before making any changes to the UI or behavior.**
