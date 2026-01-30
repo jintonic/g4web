@@ -8,38 +8,18 @@ export default defineConfig({
   // prevent Vite from scanning the submodule for dependencies
   optimizeDeps: {
     entries: ['./index.html'], // Only scan your root HTML
-    exclude: ['three/editor'], // Don't try to pre-bundle the editor files
+    exclude: ['three', 'three/editor'], // Don't try to pre-bundle the editor files
   },
   resolve: {
     alias: {
-      'three/addons/environments/ColorEnvironment.js': path.resolve(
-        __dirname,
-        'vendor/threejs/examples/jsm/environments/ColorEnvironment.js'
-      ),
-      // map the editor imports to local folder
       'three/editor': path.resolve(__dirname, 'vendor/threejs/editor'),
-
-      // redirect the editor's internal relative paths to node_modules
-      '/build/three.module.js': path.resolve(
-        __dirname,
-        'node_modules/three/build/three.module.js'
-      ),
-      '../../build/three.module.js': path.resolve(
-        __dirname,
-        'node_modules/three/build/three.module.js'
-      ),
-      'three/addons': path.resolve(
-        __dirname,
-        'node_modules/three/examples/jsm'
-      ),
-      '../../examples/jsm': path.resolve(
-        __dirname,
-        'node_modules/three/examples/jsm'
-      ),
+      'three/addons': path.resolve(__dirname, 'vendor/threejs/examples/jsm'),
+      'three/examples': path.resolve(__dirname, 'vendor/threejs/examples'),
       'three/webgpu': path.resolve(
         __dirname,
-        'node_modules/three/build/three.webgpu.js'
+        'vendor/threejs/build/three.webgpu.js'
       ),
+      three: path.resolve(__dirname, 'vendor/threejs/build/three.module.js'),
     },
   },
   build: {

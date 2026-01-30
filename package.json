@@ -1,15 +1,13 @@
 {
-  "name": "geant4-web-monorepo",
-  "version": "1.0.0",
+  "name": "geant4-web-ui-monorepo",
+  "version": "0.1.0",
   "private": true,
-  "description": "Geant4 Web UI and Physics Core Monorepo",
+  "description": "Geant4 Web UI Monorepo",
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
     "@chitrashensah/geant4-csg": "*",
-    "signals": "^1.0.0",
-    "three": "mrdoob/three.js#dev",
     "three-gpu-pathtracer": "^0.0.23"
   },
   "scripts": {
