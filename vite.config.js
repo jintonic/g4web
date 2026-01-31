@@ -13,37 +13,14 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      // Force all Three core variations to the same WebGPU file
       {
-        find: /^three$/,
-        replacement: path.resolve(
-          __dirname,
-          'vendor/threejs/build/three.webgpu.js'
-        ),
+        find: './Sidebar.Project.js',
+        replacement: path.resolve(__dirname, 'js/replacement.js'),
       },
       {
-        find: /^three\/webgpu$/,
-        replacement: path.resolve(
-          __dirname,
-          'vendor/threejs/build/three.webgpu.js'
-        ),
+        find: './Viewport.Pathtracer.js',
+        replacement: path.resolve(__dirname, 'js/replacement.js'),
       },
-      // Catch specific file references that might be used in the editor source
-      {
-        find: /.*\/build\/three\.core\.js$/,
-        replacement: path.resolve(
-          __dirname,
-          'vendor/threejs/build/three.webgpu.js'
-        ),
-      },
-      {
-        find: /.*\/build\/three\.module\.js$/,
-        replacement: path.resolve(
-          __dirname,
-          'vendor/threejs/build/three.webgpu.js'
-        ),
-      },
-
       // Mapping folders (standard string matching)
       // These will match anything starting with the "find" string
       {
@@ -58,6 +35,27 @@ export default defineConfig({
         find: 'three/examples',
         replacement: path.resolve(__dirname, 'vendor/threejs/examples'),
       },
+      {
+        find: /^three$/,
+        replacement: path.resolve(
+          __dirname,
+          'vendor/threejs/build/three.module.js'
+        ),
+      },
+      {
+        find: /.*\/build\/three\.(module|core)\.js$/,
+        replacement: path.resolve(
+          __dirname,
+          'vendor/threejs/build/three.module.js'
+        ),
+      },
+      {
+        find: 'three/webgpu',
+        replacement: path.resolve(
+          __dirname,
+          'vendor/threejs/build/three.module.js'
+        ),
+      },
     ],
   },
   build: {
@@ -69,21 +67,14 @@ export default defineConfig({
       output: {
         // FORCE splitting even if Vite thinks they should stay together
         manualChunks(id) {
-          // 1. All Three.js core files
-          if (
-            id.includes('three.webgpu.js') ||
-            id.includes('three.core.js') ||
-            id.includes('three.module.js')
-          ) {
-            return 'vendor-three';
+          if (id.includes('three.core.js')) {
+            return 'three-core';
           }
-          // 2. The entire editor UI logic
+          if (id.includes('three.module.js')) {
+            return 'three-module';
+          }
           if (id.includes('vendor/threejs/editor')) {
-            return 'vendor-editor';
-          }
-          // 3. Other npm dependencies (bvh, pathtracer, signals, etc)
-          if (id.includes('node_modules')) {
-            return 'vendor-libs';
+            return 'three-editor';
           }
         },
       },
