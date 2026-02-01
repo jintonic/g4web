@@ -3,8 +3,10 @@ export class ViewportPathtracer {
   constructor() {
     // Provide empty methods so Viewport calls don't fail
     this.init = () => {};
+    this.reset = () => {};
     this.update = () => {};
     this.setSize = () => {};
+    this.getSamples = () => {};
     this.setBackground = () => {};
     this.setEnvironment = () => {};
     this.updateMaterials = () => {};
