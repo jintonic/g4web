@@ -15,11 +15,11 @@ export default defineConfig({
     alias: [
       {
         find: './Sidebar.Project.js',
-        replacement: path.resolve(__dirname, 'js/replacement.js'),
+        replacement: path.resolve(__dirname, 'js/Replacement.js'),
       },
       {
         find: './Viewport.Pathtracer.js',
-        replacement: path.resolve(__dirname, 'js/replacement.js'),
+        replacement: path.resolve(__dirname, 'js/Replacement.js'),
       },
       // Mapping folders (standard string matching)
       // These will match anything starting with the "find" string
@@ -60,6 +60,19 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      onwarn(warning, warn) {
+        // suppress the "dynamic import will not move module into another chunk" warnings
+        if (
+          warning.code === 'UNUSED_EXTERNAL_IMPORT' ||
+          warning.message.includes(
+            'dynamic import will not move module into another chunk'
+          )
+        ) {
+          return;
+        }
+        // Use the default warning behavior for everything else
+        warn(warning);
+      },
       input: {
         // ensure Rollup only looks at the main entry point
         main: path.resolve(__dirname, 'index.html'),
@@ -86,5 +99,48 @@ export default defineConfig({
       filename: 'stats.html',
       gzipSize: true,
     }),
+    {
+      name: 'modify-threejs-editor-code',
+      transform(code, id) {
+        // remove examples from Menubar.File.js
+        if (id.includes('Menubar.File.js')) {
+          const cleanCode = code
+            .replace(/const examples = \[[\s\S]*?\];/g, 'const examples = [];')
+            .replace(
+              /for \( let i = 0; i < examples\.length; i \+\+ \) \{[\s\S]*?\}\( i \);/g,
+              ''
+            )
+            .replace(
+              /newProjectSubmenu\.add\( new UIHorizontalRule\(\) \);/g,
+              ''
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // move ViewHelper to bottom right
+        if (id.includes('Viewport.ViewHelper.js')) {
+          const cleanCode = code
+            /* Change the interaction logic anchor */
+            .replace(/this\.location\.top = 30;/g, 'this.location.bottom = 0;')
+
+            /* Change the UI Panel positioning */
+            .replace(
+              /panel\.setTop\( '30px' \);/g,
+              "panel.setBottom( '10px' );"
+            )
+            .replace(
+              /panel\.setRight\( '0px' \);/g,
+              "panel.setRight( '10px' );"
+            );
+
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+      },
+    },
   ],
 });
