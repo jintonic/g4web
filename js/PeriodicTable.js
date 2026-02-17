@@ -1,0 +1,300 @@
+/**
+ * @module PeriodicTable
+ * @description Geant4 element data for Z = 1 (Hydrogen) through Z = 98 (Californium).
+ *
+ * Each entry contains:
+ *   - id          — Atomic number (Z)
+ *   - symbol      — Chemical symbol
+ *   - elementType — Geant4 identifier (e.g. 'G4_Fe')
+ *   - density     — g/cm³
+ *   - energy      — Mean excitation energy in eV
+ *
+ * Also exports a grid-layout map (`periodicTableLayout`) for rendering an
+ * interactive periodic table UI.
+ *
+ * @see CompoundMaterials.js — compound material data that continues the ID sequence from 99+.
+ * @see Sidebar.Material.js  — consumes this data for the editor material panel.
+ */
+
+const periodicTableData = [
+  { id: 1, symbol: 'H', elementType: 'G4_H', density: 8.3748e-5, energy: 19.2 },
+  {
+    id: 2,
+    symbol: 'He',
+    elementType: 'G4_He',
+    density: 0.000166322,
+    energy: 41.8,
+  },
+  { id: 3, symbol: 'Li', elementType: 'G4_Li', density: 0.534, energy: 40 },
+  { id: 4, symbol: 'Be', elementType: 'G4_Be', density: 1.848, energy: 63.7 },
+  { id: 5, symbol: 'B', elementType: 'G4_B', density: 2.37, energy: 76 },
+  { id: 6, symbol: 'C', elementType: 'G4_C', density: 2, energy: 81 },
+  { id: 7, symbol: 'N', elementType: 'G4_N', density: 0.0011652, energy: 82 },
+  { id: 8, symbol: 'O', elementType: 'G4_O', density: 0.00133151, energy: 95 },
+  { id: 9, symbol: 'F', elementType: 'G4_F', density: 0.00158029, energy: 115 },
+  {
+    id: 10,
+    symbol: 'Ne',
+    elementType: 'G4_Ne',
+    density: 0.000838505,
+    energy: 137,
+  },
+  { id: 11, symbol: 'Na', elementType: 'G4_Na', density: 0.971, energy: 149 },
+  { id: 12, symbol: 'Mg', elementType: 'G4_Mg', density: 1.74, energy: 156 },
+  { id: 13, symbol: 'Al', elementType: 'G4_Al', density: 2.699, energy: 166 },
+  { id: 14, symbol: 'Si', elementType: 'G4_Si', density: 2.33, energy: 173 },
+  { id: 15, symbol: 'P', elementType: 'G4_P', density: 2.2, energy: 173 },
+  { id: 16, symbol: 'S', elementType: 'G4_S', density: 2, energy: 180 },
+  {
+    id: 17,
+    symbol: 'Cl',
+    elementType: 'G4_Cl',
+    density: 0.00299473,
+    energy: 174,
+  },
+  {
+    id: 18,
+    symbol: 'Ar',
+    elementType: 'G4_Ar',
+    density: 0.00166201,
+    energy: 188,
+  },
+  { id: 19, symbol: 'K', elementType: 'G4_K', density: 0.862, energy: 190 },
+  { id: 20, symbol: 'Ca', elementType: 'G4_Ca', density: 1.55, energy: 191 },
+  { id: 21, symbol: 'Sc', elementType: 'G4_Sc', density: 2.989, energy: 216 },
+  { id: 22, symbol: 'Ti', elementType: 'G4_Ti', density: 4.54, energy: 233 },
+  { id: 23, symbol: 'V', elementType: 'G4_V', density: 6.11, energy: 245 },
+  { id: 24, symbol: 'Cr', elementType: 'G4_Cr', density: 7.18, energy: 257 },
+  { id: 25, symbol: 'Mn', elementType: 'G4_Mn', density: 7.44, energy: 272 },
+  { id: 26, symbol: 'Fe', elementType: 'G4_Fe', density: 7.874, energy: 286 },
+  { id: 27, symbol: 'Co', elementType: 'G4_Co', density: 8.9, energy: 297 },
+  { id: 28, symbol: 'Ni', elementType: 'G4_Ni', density: 8.902, energy: 311 },
+  { id: 29, symbol: 'Cu', elementType: 'G4_Cu', density: 8.96, energy: 322 },
+  { id: 30, symbol: 'Zn', elementType: 'G4_Zn', density: 7.133, energy: 330 },
+  { id: 31, symbol: 'Ga', elementType: 'G4_Ga', density: 5.904, energy: 334 },
+  { id: 32, symbol: 'Ge', elementType: 'G4_Ge', density: 5.323, energy: 350 },
+  { id: 33, symbol: 'As', elementType: 'G4_As', density: 5.73, energy: 347 },
+  { id: 34, symbol: 'Se', elementType: 'G4_Se', density: 4.5, energy: 348 },
+  {
+    id: 35,
+    symbol: 'Br',
+    elementType: 'G4_Br',
+    density: 0.0070721,
+    energy: 343,
+  },
+  {
+    id: 36,
+    symbol: 'Kr',
+    elementType: 'G4_Kr',
+    density: 0.00347832,
+    energy: 352,
+  },
+  { id: 37, symbol: 'Rb', elementType: 'G4_Rb', density: 1.532, energy: 363 },
+  { id: 38, symbol: 'Sr', elementType: 'G4_Sr', density: 2.54, energy: 366 },
+  { id: 39, symbol: 'Y', elementType: 'G4_Y', density: 4.469, energy: 379 },
+  { id: 40, symbol: 'Zr', elementType: 'G4_Zr', density: 6.506, energy: 393 },
+  { id: 41, symbol: 'Nb', elementType: 'G4_Nb', density: 8.57, energy: 417 },
+  { id: 42, symbol: 'Mo', elementType: 'G4_Mo', density: 10.22, energy: 424 },
+  { id: 43, symbol: 'Tc', elementType: 'G4_Tc', density: 11.5, energy: 428 },
+  { id: 44, symbol: 'Ru', elementType: 'G4_Ru', density: 12.41, energy: 441 },
+  { id: 45, symbol: 'Rh', elementType: 'G4_Rh', density: 12.41, energy: 449 },
+  { id: 46, symbol: 'Pd', elementType: 'G4_Pd', density: 12.02, energy: 470 },
+  { id: 47, symbol: 'Ag', elementType: 'G4_Ag', density: 10.5, energy: 470 },
+  { id: 48, symbol: 'Cd', elementType: 'G4_Cd', density: 8.65, energy: 469 },
+  { id: 49, symbol: 'In', elementType: 'G4_In', density: 7.31, energy: 488 },
+  { id: 50, symbol: 'Sn', elementType: 'G4_Sn', density: 7.31, energy: 488 },
+  { id: 51, symbol: 'Sb', elementType: 'G4_Sb', density: 6.691, energy: 487 },
+  { id: 52, symbol: 'Te', elementType: 'G4_Te', density: 6.24, energy: 485 },
+  { id: 53, symbol: 'I', elementType: 'G4_I', density: 4.93, energy: 491 },
+  {
+    id: 54,
+    symbol: 'Xe',
+    elementType: 'G4_Xe',
+    density: 0.00548536,
+    energy: 482,
+  },
+  { id: 55, symbol: 'Cs', elementType: 'G4_Cs', density: 1.873, energy: 488 },
+  { id: 56, symbol: 'Ba', elementType: 'G4_Ba', density: 3.5, energy: 491 },
+  { id: 57, symbol: 'La', elementType: 'G4_La', density: 6.154, energy: 501 },
+  { id: 58, symbol: 'Ce', elementType: 'G4_Ce', density: 6.657, energy: 523 },
+  { id: 59, symbol: 'Pr', elementType: 'G4_Pr', density: 6.71, energy: 535 },
+  { id: 60, symbol: 'Nd', elementType: 'G4_Nd', density: 6.9, energy: 546 },
+  { id: 61, symbol: 'Pm', elementType: 'G4_Pm', density: 7.22, energy: 560 },
+  { id: 62, symbol: 'Sm', elementType: 'G4_Sm', density: 7.46, energy: 574 },
+  { id: 63, symbol: 'Eu', elementType: 'G4_Eu', density: 5.243, energy: 580 },
+  { id: 64, symbol: 'Gd', elementType: 'G4_Gd', density: 7.9004, energy: 591 },
+  { id: 65, symbol: 'Tb', elementType: 'G4_Tb', density: 8.229, energy: 614 },
+  { id: 66, symbol: 'Dy', elementType: 'G4_Dy', density: 8.55, energy: 628 },
+  { id: 67, symbol: 'Ho', elementType: 'G4_Ho', density: 8.795, energy: 650 },
+  { id: 68, symbol: 'Er', elementType: 'G4_Er', density: 9.066, energy: 658 },
+  { id: 69, symbol: 'Tm', elementType: 'G4_Tm', density: 9.321, energy: 674 },
+  { id: 70, symbol: 'Yb', elementType: 'G4_Yb', density: 6.73, energy: 684 },
+  { id: 71, symbol: 'Lu', elementType: 'G4_Lu', density: 9.84, energy: 694 },
+  { id: 72, symbol: 'Hf', elementType: 'G4_Hf', density: 13.31, energy: 705 },
+  { id: 73, symbol: 'Ta', elementType: 'G4_Ta', density: 16.654, energy: 718 },
+  { id: 74, symbol: 'W', elementType: 'G4_W', density: 19.3, energy: 727 },
+  { id: 75, symbol: 'Re', elementType: 'G4_Re', density: 21.02, energy: 736 },
+  { id: 76, symbol: 'Os', elementType: 'G4_Os', density: 22.57, energy: 746 },
+  { id: 77, symbol: 'Ir', elementType: 'G4_Ir', density: 22.42, energy: 757 },
+  { id: 78, symbol: 'Pt', elementType: 'G4_Pt', density: 21.45, energy: 790 },
+  { id: 79, symbol: 'Au', elementType: 'G4_Au', density: 19.32, energy: 790 },
+  { id: 80, symbol: 'Hg', elementType: 'G4_Hg', density: 13.546, energy: 800 },
+  { id: 81, symbol: 'Tl', elementType: 'G4_Tl', density: 11.72, energy: 810 },
+  { id: 82, symbol: 'Pb', elementType: 'G4_Pb', density: 11.35, energy: 823 },
+  { id: 83, symbol: 'Bi', elementType: 'G4_Bi', density: 9.747, energy: 823 },
+  { id: 84, symbol: 'Po', elementType: 'G4_Po', density: 9.32, energy: 830 },
+  { id: 85, symbol: 'At', elementType: 'G4_At', density: 9.32, energy: 825 },
+  {
+    id: 86,
+    symbol: 'Rn',
+    elementType: 'G4_Rn',
+    density: 0.00900662,
+    energy: 794,
+  },
+  { id: 87, symbol: 'Fr', elementType: 'G4_Fr', density: 1, energy: 827 },
+  { id: 88, symbol: 'Ra', elementType: 'G4_Ra', density: 5, energy: 826 },
+  { id: 89, symbol: 'Ac', elementType: 'G4_Ac', density: 10.07, energy: 841 },
+  { id: 90, symbol: 'Th', elementType: 'G4_Th', density: 11.72, energy: 847 },
+  { id: 91, symbol: 'Pa', elementType: 'G4_Pa', density: 15.37, energy: 878 },
+  { id: 92, symbol: 'U', elementType: 'G4_U', density: 18.95, energy: 890 },
+  { id: 93, symbol: 'Np', elementType: 'G4_Np', density: 20.25, energy: 902 },
+  { id: 94, symbol: 'Pu', elementType: 'G4_Pu', density: 19.84, energy: 921 },
+  { id: 95, symbol: 'Am', elementType: 'G4_Am', density: 13.67, energy: 934 },
+  { id: 96, symbol: 'Cm', elementType: 'G4_Cm', density: 13.51, energy: 939 },
+  { id: 97, symbol: 'Bk', elementType: 'G4_Bk', density: 14, energy: 952 },
+  { id: 98, symbol: 'Cf', elementType: 'G4_Cf', density: 10, energy: 966 },
+];
+
+/** Grid positions for rendering the periodic table (standard 18-column layout). */
+const periodicTableLayout = [
+  // Period 1
+  { id: 1, row: 1, col: 1 },
+  { id: 2, row: 1, col: 18 },
+  // Period 2
+  { id: 3, row: 2, col: 1 },
+  { id: 4, row: 2, col: 2 },
+  { id: 5, row: 2, col: 13 },
+  { id: 6, row: 2, col: 14 },
+  { id: 7, row: 2, col: 15 },
+  { id: 8, row: 2, col: 16 },
+  { id: 9, row: 2, col: 17 },
+  { id: 10, row: 2, col: 18 },
+  // Period 3
+  { id: 11, row: 3, col: 1 },
+  { id: 12, row: 3, col: 2 },
+  { id: 13, row: 3, col: 13 },
+  { id: 14, row: 3, col: 14 },
+  { id: 15, row: 3, col: 15 },
+  { id: 16, row: 3, col: 16 },
+  { id: 17, row: 3, col: 17 },
+  { id: 18, row: 3, col: 18 },
+  // Period 4
+  { id: 19, row: 4, col: 1 },
+  { id: 20, row: 4, col: 2 },
+  { id: 21, row: 4, col: 3 },
+  { id: 22, row: 4, col: 4 },
+  { id: 23, row: 4, col: 5 },
+  { id: 24, row: 4, col: 6 },
+  { id: 25, row: 4, col: 7 },
+  { id: 26, row: 4, col: 8 },
+  { id: 27, row: 4, col: 9 },
+  { id: 28, row: 4, col: 10 },
+  { id: 29, row: 4, col: 11 },
+  { id: 30, row: 4, col: 12 },
+  { id: 31, row: 4, col: 13 },
+  { id: 32, row: 4, col: 14 },
+  { id: 33, row: 4, col: 15 },
+  { id: 34, row: 4, col: 16 },
+  { id: 35, row: 4, col: 17 },
+  { id: 36, row: 4, col: 18 },
+  // Period 5
+  { id: 37, row: 5, col: 1 },
+  { id: 38, row: 5, col: 2 },
+  { id: 39, row: 5, col: 3 },
+  { id: 40, row: 5, col: 4 },
+  { id: 41, row: 5, col: 5 },
+  { id: 42, row: 5, col: 6 },
+  { id: 43, row: 5, col: 7 },
+  { id: 44, row: 5, col: 8 },
+  { id: 45, row: 5, col: 9 },
+  { id: 46, row: 5, col: 10 },
+  { id: 47, row: 5, col: 11 },
+  { id: 48, row: 5, col: 12 },
+  { id: 49, row: 5, col: 13 },
+  { id: 50, row: 5, col: 14 },
+  { id: 51, row: 5, col: 15 },
+  { id: 52, row: 5, col: 16 },
+  { id: 53, row: 5, col: 17 },
+  { id: 54, row: 5, col: 18 },
+  // Period 6 (Lanthanides separated to rows 9)
+  { id: 55, row: 6, col: 1 },
+  { id: 56, row: 6, col: 2 },
+  { id: 72, row: 6, col: 4 },
+  { id: 73, row: 6, col: 5 },
+  { id: 74, row: 6, col: 6 },
+  { id: 75, row: 6, col: 7 },
+  { id: 76, row: 6, col: 8 },
+  { id: 77, row: 6, col: 9 },
+  { id: 78, row: 6, col: 10 },
+  { id: 79, row: 6, col: 11 },
+  { id: 80, row: 6, col: 12 },
+  { id: 81, row: 6, col: 13 },
+  { id: 82, row: 6, col: 14 },
+  { id: 83, row: 6, col: 15 },
+  { id: 84, row: 6, col: 16 },
+  { id: 85, row: 6, col: 17 },
+  { id: 86, row: 6, col: 18 },
+  // Period 7 (Actinides separated to row 10)
+  { id: 87, row: 7, col: 1 },
+  { id: 88, row: 7, col: 2 },
+  // Lanthanides (Z = 57–71)
+  { id: 57, row: 9, col: 4 },
+  { id: 58, row: 9, col: 5 },
+  { id: 59, row: 9, col: 6 },
+  { id: 60, row: 9, col: 7 },
+  { id: 61, row: 9, col: 8 },
+  { id: 62, row: 9, col: 9 },
+  { id: 63, row: 9, col: 10 },
+  { id: 64, row: 9, col: 11 },
+  { id: 65, row: 9, col: 12 },
+  { id: 66, row: 9, col: 13 },
+  { id: 67, row: 9, col: 14 },
+  { id: 68, row: 9, col: 15 },
+  { id: 69, row: 9, col: 16 },
+  { id: 70, row: 9, col: 17 },
+  { id: 71, row: 9, col: 18 },
+  // Actinides (Z = 89–98)
+  { id: 89, row: 10, col: 4 },
+  { id: 90, row: 10, col: 5 },
+  { id: 91, row: 10, col: 6 },
+  { id: 92, row: 10, col: 7 },
+  { id: 93, row: 10, col: 8 },
+  { id: 94, row: 10, col: 9 },
+  { id: 95, row: 10, col: 10 },
+  { id: 96, row: 10, col: 11 },
+  { id: 97, row: 10, col: 12 },
+  { id: 98, row: 10, col: 13 },
+];
+
+/** Finds an element by atomic number (1–98). */
+function getElementByNumber(atomicNumber) {
+  return periodicTableData.find((el) => el.id === atomicNumber);
+}
+
+/** Finds an element by chemical symbol (e.g. `'Fe'`). */
+function getElementBySymbol(symbol) {
+  return periodicTableData.find((el) => el.symbol === symbol);
+}
+
+/** Finds an element by its Geant4 type string (e.g. `'G4_Fe'`). */
+function getElementByType(elementType) {
+  return periodicTableData.find((el) => el.elementType === elementType);
+}
+
+export {
+  periodicTableData,
+  periodicTableLayout,
+  getElementByNumber,
+  getElementBySymbol,
+  getElementByType,
+};

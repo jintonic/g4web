@@ -21,6 +21,10 @@ export default defineConfig({
         find: './Viewport.Pathtracer.js',
         replacement: path.resolve(__dirname, 'js/Replacement.js'),
       },
+      {
+        find: './Sidebar.Material.js',
+        replacement: path.resolve(__dirname, 'js/Sidebar.Material.js'),
+      },
       // Mapping folders (standard string matching)
       // These will match anything starting with the "find" string
       {
