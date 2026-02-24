@@ -5,16 +5,14 @@
  * Replaces the default Three.js Sidebar.Material.js via a Vite alias defined
  * in vite.config.mjs. Vendor files under vendor/threejs/ are never modified.
  *
- * Material data is sourced from two companion modules:
- *   - PeriodicTable.js  — 98 elements (Z = 1–98)
- *   - CompoundMaterials.js — NIST, HEP/Nuclear, Space, and Bio-Chemical compounds
+ * Material data is provided by the centralized MaterialDatabase module, which
+ * aggregates elements and compounds with scalable, range-based numeric IDs.
  *
  * Selected material metadata is persisted on `object.userData.g4Material` so it
  * survives serialization and is available to the Geant4 export pipeline.
+ *
+ * @see MaterialDatabase.js — centralized material registry and lookup API.
  */
-
-import * as THREE from 'three';
-
 import {
   UIInput,
   UIPanel,
@@ -26,23 +24,12 @@ import { SetMaterialValueCommand } from 'three/editor/js/commands/SetMaterialVal
 import { SidebarMaterialColorProperty } from 'three/editor/js/Sidebar.Material.ColorProperty.js';
 import { SidebarMaterialNumberProperty } from 'three/editor/js/Sidebar.Material.NumberProperty.js';
 
-import { periodicTableData, getElementByType } from './PeriodicTable.js';
 import {
-  nistCompoundMaterialOptions,
-  hnMaterialOptions,
-  spaceMaterialOptions,
-  bioMaterialOptions,
-  getCompoundByType,
-} from './CompoundMaterials.js';
-
-/** Enum-like keys for material category selection. */
-const MATERIAL_TYPES = {
-  ELEMENT: 'element',
-  NIST: 'nist',
-  HN: 'hn',
-  SPACE: 'space',
-  BIO: 'bio',
-};
+  CATEGORY,
+  getElements,
+  getMaterial,
+  getMaterialsByCategory,
+} from './MaterialDatabase.js';
 
 function SidebarMaterial(editor) {
   const signals = editor.signals;
@@ -77,13 +64,13 @@ function SidebarMaterial(editor) {
     .setWidth('150px')
     .setFontSize('12px');
   materialCategorySelect.setOptions({
-    [MATERIAL_TYPES.ELEMENT]: 'Elements (Periodic Table)',
-    [MATERIAL_TYPES.NIST]: 'NIST Compounds',
-    [MATERIAL_TYPES.HN]: 'HEP & Nuclear',
-    [MATERIAL_TYPES.SPACE]: 'Space Materials',
-    [MATERIAL_TYPES.BIO]: 'Bio-Chemical',
+    [CATEGORY.ELEMENT]: 'Elements (Periodic Table)',
+    [CATEGORY.NIST]: 'NIST Compounds',
+    [CATEGORY.HN]: 'HEP & Nuclear',
+    [CATEGORY.SPACE]: 'Space Materials',
+    [CATEGORY.BIO]: 'Bio-Chemical',
   });
-  materialCategorySelect.setValue(MATERIAL_TYPES.ELEMENT);
+  materialCategorySelect.setValue(CATEGORY.ELEMENT);
   materialCategorySelect.onChange(onCategoryChange);
   materialCategoryRow.add(materialCategorySelect);
   container.add(materialCategoryRow);
@@ -94,7 +81,7 @@ function SidebarMaterial(editor) {
 
   const elementSelect = new UISelect().setWidth('150px').setFontSize('12px');
   const elementOptions = {};
-  periodicTableData.forEach((el) => {
+  getElements().forEach((el) => {
     elementOptions[el.elementType] =
       `${el.symbol} (${el.id}) - ${el.elementType}`;
   });
@@ -150,13 +137,12 @@ function SidebarMaterial(editor) {
   container.add(materialOpacity);
 
   /**
-   * Guards against cascading updates. When `true`, change handlers skip
-   * committing state so that `refreshUI()` can restore dropdowns without
-   * side-effects. See `commitMaterialToObject()` and `onMaterialSelect()`.
+   * When `true`, change handlers skip committing state so that
+   * `refreshUI()` can restore dropdowns without side-effects.
    */
   let isRestoring = false;
 
-  /** Updates the read-only density and energy display fields. Pure UI — no side effects. */
+  /** Updates the read-only density and energy display fields. */
   function updateDisplayFields(materialData) {
     if (!materialData) return;
 
@@ -169,35 +155,21 @@ function SidebarMaterial(editor) {
     energyDisplay.setValue(materialData.energy);
   }
 
-  /** Returns the material data object matching the currently visible dropdown selection. */
+  /** Returns the material data matching the currently visible dropdown selection. */
   function getMaterialDataFromUI() {
     const category = materialCategorySelect.getValue();
 
-    if (category === MATERIAL_TYPES.ELEMENT) {
-      return getElementByType(elementSelect.getValue());
-    } else {
-      return getCompoundByType(compoundSelect.getValue());
-    }
+    const elementType =
+      category === CATEGORY.ELEMENT
+        ? elementSelect.getValue()
+        : compoundSelect.getValue();
+
+    return getMaterial(elementType);
   }
 
-  /** Populates the compound dropdown for the given category and returns its materials array. */
+  /** Populates the compound dropdown for the given category. */
   function populateCompoundOptions(category) {
-    let materials = [];
-
-    switch (category) {
-      case MATERIAL_TYPES.NIST:
-        materials = nistCompoundMaterialOptions;
-        break;
-      case MATERIAL_TYPES.HN:
-        materials = hnMaterialOptions;
-        break;
-      case MATERIAL_TYPES.SPACE:
-        materials = spaceMaterialOptions;
-        break;
-      case MATERIAL_TYPES.BIO:
-        materials = bioMaterialOptions;
-        break;
-    }
+    const materials = getMaterialsByCategory(category);
 
     const options = {};
     materials.forEach((m) => {
@@ -210,16 +182,16 @@ function SidebarMaterial(editor) {
     return materials;
   }
 
-  /** Handles category dropdown changes — toggles row visibility and auto-selects the first material. */
+  /** Handles category dropdown changes. */
   function onCategoryChange() {
     const category = materialCategorySelect.getValue();
 
-    if (category === MATERIAL_TYPES.ELEMENT) {
+    if (category === CATEGORY.ELEMENT) {
       elementSelectRow.setDisplay('');
       compoundSelectRow.setDisplay('none');
 
       if (!isRestoring) {
-        const materialData = getElementByType(elementSelect.getValue());
+        const materialData = getMaterial(elementSelect.getValue());
         updateDisplayFields(materialData);
       }
     } else {
@@ -239,7 +211,7 @@ function SidebarMaterial(editor) {
     }
   }
 
-  /** Handles element/compound dropdown selection — updates display and commits to object. */
+  /** Handles element/compound dropdown selection. */
   function onMaterialSelect() {
     const materialData = getMaterialDataFromUI();
 
@@ -253,12 +225,11 @@ function SidebarMaterial(editor) {
   }
 
   /**
-   * Persists the selected material to the current object. This is the single
-   * mutation point — all other functions are either pure-UI or read-only.
+   * Persists the selected material to the current object.
    *
-   * IMPORTANT: userData must be written before `editor.execute()` because the
-   * command dispatches `signals.materialChanged` → `refreshUI()`, which reads
-   * userData to restore dropdown state. Writing after would cause a one-behind lag.
+   * userData is written before `editor.execute()` because the command
+   * dispatches `signals.materialChanged` → `refreshUI()`, which reads
+   * userData to restore dropdown state.
    */
   function commitMaterialToObject(materialData) {
     if (!currentObject || !materialData) return;
@@ -337,11 +308,11 @@ function SidebarMaterial(editor) {
 
     if (currentObject.userData.g4Material) {
       const g4Data = currentObject.userData.g4Material;
-      const category = g4Data.category || MATERIAL_TYPES.ELEMENT;
+      const category = g4Data.category || CATEGORY.ELEMENT;
 
       materialCategorySelect.setValue(category);
 
-      if (category === MATERIAL_TYPES.ELEMENT) {
+      if (category === CATEGORY.ELEMENT) {
         elementSelectRow.setDisplay('');
         compoundSelectRow.setDisplay('none');
         elementSelect.setValue(g4Data.elementType);
@@ -354,11 +325,11 @@ function SidebarMaterial(editor) {
 
       updateDisplayFields(g4Data);
     } else {
-      materialCategorySelect.setValue(MATERIAL_TYPES.ELEMENT);
+      materialCategorySelect.setValue(CATEGORY.ELEMENT);
       elementSelectRow.setDisplay('');
       compoundSelectRow.setDisplay('none');
 
-      const firstElement = periodicTableData[0];
+      const firstElement = getElements()[0];
       if (firstElement) {
         elementSelect.setValue(firstElement.elementType);
         updateDisplayFields(firstElement);
@@ -399,9 +370,9 @@ function SidebarMaterial(editor) {
   isRestoring = true;
   elementSelectRow.setDisplay('');
   compoundSelectRow.setDisplay('none');
-  if (periodicTableData[0]) {
-    elementSelect.setValue(periodicTableData[0].elementType);
-    updateDisplayFields(periodicTableData[0]);
+  if (getElements()[0]) {
+    elementSelect.setValue(getElements()[0].elementType);
+    updateDisplayFields(getElements()[0]);
   }
   isRestoring = false;
 
