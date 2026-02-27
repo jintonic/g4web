@@ -10,11 +10,31 @@
 
   /* Preserve your existing styling */
   height: 32px;
-  background: #333 !important;
   display: flex;
   align-items: center;
   gap: 2px;
   border-radius: 6px;
-  border: 3px solid #333 !important;
   z-index: 10; /* Ensure it stays above the 3D canvas */
+}
+
+/* ── Sidebar Material Panel ── */
+
+#g4MaterialPanel {
+  border-top: 0;
+  padding-top: 20px;
+}
+
+#g4MaterialPanel .G4MaterialSlot {
+  width: 170px;
+  font-size: 12px;
+}
+
+#g4MaterialPanel .G4MaterialSelect {
+  width: 150px;
+  font-size: 12px;
+}
+
+#g4MaterialPanel .G4MaterialDisplay {
+  width: 150px;
+  font-size: 12px;
 }
