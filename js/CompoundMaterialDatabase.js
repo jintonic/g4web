@@ -1,5 +1,5 @@
 /**
- * @module CompoundMaterials
+ * @module CompoundMaterialDatabase
  * @description Geant4 compound material data.
  *
  * Materials are organized into four categories:
@@ -13,10 +13,10 @@
  *   - density     — g/cm³
  *   - energy      — Mean excitation energy in eV
  *
- * Numeric IDs are assigned by MaterialDatabase.js using reserved ID ranges.
+ * Numeric IDs are assigned by MaterialDatabaseHandler.js using reserved ID ranges.
  *
- * @see MaterialDatabase.js — centralized material registry consuming this data.
- * @see PeriodicTable.js    — element data.
+ * @see MaterialDatabaseHandler.js — centralized material registry consuming this data.
+ * @see SimpleMaterialDatabase.js — element data.
  */
 
 /** NIST compound materials. */

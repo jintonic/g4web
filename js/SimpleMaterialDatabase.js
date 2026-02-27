@@ -1,5 +1,5 @@
 /**
- * @module PeriodicTable
+ * @module SimpleMaterialDatabase
  * @description Raw Geant4 element data for Z = 1 (Hydrogen) through Z = 98 (Californium).
  *
  * Each entry contains:
@@ -10,10 +10,10 @@
  *   - energy       — Mean excitation energy in eV
  *
  * This module provides raw data only. For lookups and the centralized
- * registry, use MaterialDatabase.js.
+ * registry, use MaterialDatabaseHandler.js.
  *
- * @see MaterialDatabase.js  — centralized material registry consuming this data.
- * @see CompoundMaterials.js — compound material data.
+ * @see MaterialDatabaseHandler.js  — centralized material registry consuming this data.
+ * @see CompoundMaterialDatabase.js — compound material data.
  */
 
 const elements = [

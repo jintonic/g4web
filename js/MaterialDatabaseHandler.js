@@ -1,8 +1,8 @@
 /**
- * @module MaterialDatabase
+ * @module MaterialDatabaseHandler
  * @description Centralized Geant4 material registry with scalable ID ranges.
  *
- * Imports raw material data from SimpleElementDatabase.js and CompoundMaterialDatabase.js,
+ * Imports raw material data from SimpleMaterialDatabase.js and CompoundMaterialDatabase.js,
  * assigns stable numeric IDs within reserved ranges, and exposes lookups
  * by the Geant4 `material` string — the canonical key for all materials.
  *
@@ -19,12 +19,12 @@
  * For compounds, IDs are auto-assigned sequentially from the range start.
  * Adding new entries to any category will never collide with another category.
  *
- * @see SimpleElementDatabase.js    — raw element data.
+ * @see SimpleMaterialDatabase.js — raw element data.
  * @see CompoundMaterialDatabase.js — raw compound data (NIST, HEP, Space, Bio).
  * @see Sidebar.Material.js  — consumes this module for the editor material panel.
  */
 
-import { elements } from './SimpleElementDatabase.js';
+import { elements } from './SimpleMaterialDatabase.js';
 import {
   nistCompounds,
   hnCompounds,
