@@ -2,9 +2,9 @@
  * @module MaterialDatabase
  * @description Centralized Geant4 material registry with scalable ID ranges.
  *
- * Imports raw material data from PeriodicTable.js and CompoundMaterials.js,
+ * Imports raw material data from SimpleElementDatabase.js and CompoundMaterialDatabase.js,
  * assigns stable numeric IDs within reserved ranges, and exposes lookups
- * by the Geant4 `elementType` string — the canonical key for all materials.
+ * by the Geant4 `material` string — the canonical key for all materials.
  *
  * ID Range Allocation:
  *   Category               Range       Reserved Slots
@@ -19,18 +19,18 @@
  * For compounds, IDs are auto-assigned sequentially from the range start.
  * Adding new entries to any category will never collide with another category.
  *
- * @see PeriodicTable.js    — raw element data.
- * @see CompoundMaterials.js — raw compound data (NIST, HEP, Space, Bio).
+ * @see SimpleElementDatabase.js    — raw element data.
+ * @see CompoundMaterialDatabase.js — raw compound data (NIST, HEP, Space, Bio).
  * @see Sidebar.Material.js  — consumes this module for the editor material panel.
  */
 
-import { elements } from './PeriodicTable.js';
+import { elements } from './SimpleElementDatabase.js';
 import {
   nistCompounds,
   hnCompounds,
   spaceCompounds,
   bioCompounds,
-} from './CompoundMaterials.js';
+} from './CompoundMaterialDatabase.js';
 
 /** Material category keys. */
 export const CATEGORY = Object.freeze({
@@ -50,7 +50,7 @@ export const ID_RANGES = Object.freeze({
   [CATEGORY.BIO]: { start: 701, end: 900 },
 });
 
-/** @type {Map<string, Object>} Materials keyed by `elementType`. */
+/** @type {Map<string, Object>} Materials keyed by `material`. */
 const registry = new Map();
 
 /** @type {Map<string, Object[]>} Material arrays keyed by category. */
@@ -60,7 +60,7 @@ const categoryMap = new Map();
  * Registers a batch of materials for a single category.
  *
  * @param {string} category   One of {@link CATEGORY} values.
- * @param {Object[]} entries  Raw material objects (must have `elementType`).
+ * @param {Object[]} entries  Raw material objects (must have `material`).
  * @param {Object}  [options]
  * @param {boolean} [options.useAtomicNumber=false]  When `true`, the
  *   `atomicNumber` field on each entry is used as the numeric ID (elements
@@ -78,15 +78,15 @@ function registerCategory(category, entries, { useAtomicNumber = false } = {}) {
   let nextAutoId = range.start;
 
   for (const raw of entries) {
-    if (!raw.elementType) {
+    if (!raw.material) {
       throw new Error(
-        `MaterialDatabase: entry in "${category}" is missing elementType.`
+        `MaterialDatabase: entry in "${category}" is missing material.`
       );
     }
 
-    if (registry.has(raw.elementType)) {
+    if (registry.has(raw.material)) {
       throw new Error(
-        `MaterialDatabase: duplicate elementType "${raw.elementType}".`
+        `MaterialDatabase: duplicate material "${raw.material}".`
       );
     }
 
@@ -94,13 +94,13 @@ function registerCategory(category, entries, { useAtomicNumber = false } = {}) {
 
     if (id < range.start || id > range.end) {
       throw new Error(
-        `MaterialDatabase: ID ${id} for "${raw.elementType}" is outside ` +
+        `MaterialDatabase: ID ${id} for "${raw.material}" is outside ` +
           `the ${category} range [${range.start}–${range.end}].`
       );
     }
 
     const entry = Object.freeze({ ...raw, id, category });
-    registry.set(raw.elementType, entry);
+    registry.set(raw.material, entry);
     registered.push(entry);
 
     if (!useAtomicNumber) {
@@ -122,11 +122,11 @@ registerCategory(CATEGORY.BIO, bioCompounds);
 /**
  * Looks up a material by its Geant4 type string.
  *
- * @param {string} elementType  e.g. `'G4_Fe'`, `'G4_WATER'`
+ * @param {string} material  e.g. `'G4_Fe'`, `'G4_WATER'`
  * @returns {Object|undefined}  The registry entry, or `undefined`.
  */
-export function getMaterial(elementType) {
-  return registry.get(elementType);
+export function getMaterial(material) {
+  return registry.get(material);
 }
 
 /**

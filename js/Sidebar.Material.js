@@ -5,13 +5,13 @@
  * Replaces the default Three.js Sidebar.Material.js via a Vite alias defined
  * in vite.config.mjs. Vendor files under vendor/threejs/ are never modified.
  *
- * Material data is provided by the centralized MaterialDatabase module, which
- * aggregates elements and compounds with scalable, range-based numeric IDs.
+ * Material data is provided by the centralized MaterialDatabaseHandler module,
+ * which aggregates elements and compounds with scalable, range-based numeric IDs.
  *
  * Selected material metadata is persisted on `object.userData.g4Material` so it
  * survives serialization and is available to the Geant4 export pipeline.
  *
- * @see MaterialDatabase.js — centralized material registry and lookup API.
+ * @see MaterialDatabaseHandler.js — centralized material registry and lookup API.
  */
 import {
   UIInput,
@@ -29,7 +29,7 @@ import {
   getElements,
   getMaterial,
   getMaterialsByCategory,
-} from './MaterialDatabase.js';
+} from './MaterialDatabaseHandler.js';
 
 function SidebarMaterial(editor) {
   const signals = editor.signals;
@@ -78,8 +78,7 @@ function SidebarMaterial(editor) {
   const elementSelect = new UISelect().addClass('G4MaterialSelect');
   const elementOptions = {};
   getElements().forEach((el) => {
-    elementOptions[el.elementType] =
-      `${el.symbol} (${el.id}) - ${el.elementType}`;
+    elementOptions[el.material] = `${el.symbol} (${el.id}) - ${el.material}`;
   });
   elementSelect.setOptions(elementOptions);
   elementSelect.onChange(onMaterialSelect);
@@ -153,12 +152,12 @@ function SidebarMaterial(editor) {
   function getMaterialDataFromUI() {
     const category = materialCategorySelect.getValue();
 
-    const elementType =
+    const materialKey =
       category === CATEGORY.ELEMENT
         ? elementSelect.getValue()
         : compoundSelect.getValue();
 
-    return getMaterial(elementType);
+    return getMaterial(materialKey);
   }
 
   /** Populates the compound dropdown for the given category. */
@@ -167,8 +166,8 @@ function SidebarMaterial(editor) {
 
     const options = {};
     materials.forEach((m) => {
-      const displayName = m.elementType.replace('G4_', '').replace(/_/g, ' ');
-      options[m.elementType] = displayName;
+      const displayName = m.material.replace('G4_', '').replace(/_/g, ' ');
+      options[m.material] = displayName;
     });
 
     compoundSelect.setOptions(options);
@@ -195,7 +194,7 @@ function SidebarMaterial(editor) {
       const materials = populateCompoundOptions(category);
 
       if (materials.length > 0) {
-        compoundSelect.setValue(materials[0].elementType);
+        compoundSelect.setValue(materials[0].material);
         updateDisplayFields(materials[0]);
 
         if (!isRestoring && currentObject) {
@@ -232,7 +231,7 @@ function SidebarMaterial(editor) {
 
     currentObject.userData.g4Material = {
       category: category,
-      elementType: materialData.elementType,
+      material: materialData.material,
       density: materialData.density,
       energy: materialData.energy,
     };
@@ -242,7 +241,7 @@ function SidebarMaterial(editor) {
         editor,
         currentObject,
         'name',
-        materialData.elementType,
+        materialData.material,
         currentMaterialSlot
       )
     );
@@ -309,12 +308,12 @@ function SidebarMaterial(editor) {
       if (category === CATEGORY.ELEMENT) {
         elementSelectRow.setDisplay('');
         compoundSelectRow.setDisplay('none');
-        elementSelect.setValue(g4Data.elementType);
+        elementSelect.setValue(g4Data.material);
       } else {
         elementSelectRow.setDisplay('none');
         compoundSelectRow.setDisplay('');
         populateCompoundOptions(category);
-        compoundSelect.setValue(g4Data.elementType);
+        compoundSelect.setValue(g4Data.material);
       }
 
       updateDisplayFields(g4Data);
@@ -325,7 +324,7 @@ function SidebarMaterial(editor) {
 
       const firstElement = getElements()[0];
       if (firstElement) {
-        elementSelect.setValue(firstElement.elementType);
+        elementSelect.setValue(firstElement.material);
         updateDisplayFields(firstElement);
       }
     }
@@ -365,7 +364,7 @@ function SidebarMaterial(editor) {
   elementSelectRow.setDisplay('');
   compoundSelectRow.setDisplay('none');
   if (getElements()[0]) {
-    elementSelect.setValue(getElements()[0].elementType);
+    elementSelect.setValue(getElements()[0].material);
     updateDisplayFields(getElements()[0]);
   }
   isRestoring = false;
