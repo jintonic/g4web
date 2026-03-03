@@ -240,7 +240,6 @@ function SidebarMaterial(editor) {
       new SetMaterialValueCommand(
         editor,
         currentObject,
-        'name',
         materialData.material,
         currentMaterialSlot
       )
