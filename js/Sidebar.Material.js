@@ -240,6 +240,7 @@ function SidebarMaterial(editor) {
       new SetMaterialValueCommand(
         editor,
         currentObject,
+        'name',
         materialData.material,
         currentMaterialSlot
       )
@@ -298,24 +299,34 @@ function SidebarMaterial(editor) {
 
     material = editor.getObjectMaterial(currentObject, currentMaterialSlot);
 
-    if (currentObject.userData.g4Material) {
-      const g4Data = currentObject.userData.g4Material;
-      const category = g4Data.category || CATEGORY.ELEMENT;
+    // Derive UI state from material.name
+    const lookedUp = getMaterial(material.name);
+
+    if (lookedUp) {
+      const category = lookedUp.category || CATEGORY.ELEMENT;
+
+      // Sync userData
+      currentObject.userData.g4Material = {
+        category: category,
+        material: lookedUp.material,
+        density: lookedUp.density,
+        energy: lookedUp.energy,
+      };
 
       materialCategorySelect.setValue(category);
 
       if (category === CATEGORY.ELEMENT) {
         elementSelectRow.setDisplay('');
         compoundSelectRow.setDisplay('none');
-        elementSelect.setValue(g4Data.material);
+        elementSelect.setValue(lookedUp.material);
       } else {
         elementSelectRow.setDisplay('none');
         compoundSelectRow.setDisplay('');
         populateCompoundOptions(category);
-        compoundSelect.setValue(g4Data.material);
+        compoundSelect.setValue(lookedUp.material);
       }
 
-      updateDisplayFields(g4Data);
+      updateDisplayFields(lookedUp);
     } else {
       materialCategorySelect.setValue(CATEGORY.ELEMENT);
       elementSelectRow.setDisplay('');
