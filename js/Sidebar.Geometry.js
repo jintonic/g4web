@@ -7,12 +7,58 @@ import {
   UIInput,
   UISpan,
   UINumber,
+  UIInteger,
+  UIDiv,
 } from '../vendor/threejs/editor/js/libs/ui.js';
 import { SetGeometryValueCommand } from '../vendor/threejs/editor/js/commands/SetGeometryValueCommand.js';
-import { GEOMETRY_CONFIGS } from './configs/geometryConfigs.js';
+import { SetGeometryCommand } from '../vendor/threejs/editor/js/commands/SetGeometryCommand.js';
+import { getEditorConfig } from '@chitrashensah/geant4-csg';
+
+function addStopPropagation(input) {
+  input.dom.addEventListener('pointerup', (e) => e.stopPropagation());
+  input.dom.addEventListener('mouseup', (e) => e.stopPropagation());
+}
+
+function buildZPlaneRows(container, numPlanes, zPlaneData, onChange) {
+  container.clear();
+  const inputs = [];
+
+  const headerRow = new UIRow();
+  headerRow.add(new UIText('#').setWidth('30px'));
+  headerRow.add(new UIText('Z').setWidth('55px'));
+  headerRow.add(new UIText('rInner').setWidth('55px'));
+  headerRow.add(new UIText('rOuter').setWidth('55px'));
+  container.add(headerRow);
+
+  for (let i = 0; i < numPlanes; i++) {
+    const row = new UIRow();
+    row.add(new UIText(`${i + 1}`).setWidth('30px'));
+
+    const zInput = new UINumber(zPlaneData[i * 3] ?? i)
+      .setWidth('55px')
+      .onChange(onChange);
+    const rInnerInput = new UINumber(zPlaneData[i * 3 + 1] ?? 0)
+      .setWidth('55px')
+      .onChange(onChange);
+    const rOuterInput = new UINumber(zPlaneData[i * 3 + 2] ?? 1)
+      .setWidth('55px')
+      .onChange(onChange);
+
+    addStopPropagation(zInput);
+    addStopPropagation(rInnerInput);
+    addStopPropagation(rOuterInput);
+
+    row.add(zInput);
+    row.add(rInnerInput);
+    row.add(rOuterInput);
+    container.add(row);
+    inputs.push({ z: zInput, rInner: rInnerInput, rOuter: rOuterInput });
+  }
+
+  return inputs;
+}
 
 function SidebarGeometry(editor) {
-  const strings = editor.strings;
   const signals = editor.signals;
 
   const container = new UIPanel();
@@ -30,8 +76,7 @@ function SidebarGeometry(editor) {
   const geometryNameRow = new UIRow();
   const geometryName = new UIInput().onChange(function () {
     const nameConstraint = (name) => {
-      const regex = /^[a-zA-Z0-9]+$/;
-
+      const regex = /^[a-zA-Z0-9_]+$/;
       if (!regex.test(name)) {
         alert('Warning: Name cannot contain spaces or symbols.');
         geometryName.setValue('');
@@ -66,7 +111,7 @@ function SidebarGeometry(editor) {
     const geometryType = geometry.type;
     const parametersContainer = new UIPanel();
 
-    const config = GEOMETRY_CONFIGS[geometryType];
+    const config = getEditorConfig(geometryType, SetGeometryCommand);
 
     if (!config) {
       console.warn('No configuration found for:', geometryType);
@@ -75,17 +120,8 @@ function SidebarGeometry(editor) {
 
     const uiControls = {};
     const currentValues = {};
-
-    const gridSpaceRow = new UIRow();
-    const gridSpace = new UIText('Grid Info').setClass('grid_Space');
-    gridSpaceRow.add(gridSpace);
-    parametersContainer.add(gridSpaceRow);
-
-    tippy(gridSpace.dom, {
-      content:
-        'The grid is 6x6, with each square and the space between lines measuring 1 cm.',
-      placement: 'top',
-    });
+    let zPlaneContainer = null;
+    let zPlaneInputsRef = [];
 
     Object.keys(config.parameters).forEach((paramName) => {
       const param = config.parameters[paramName];
@@ -96,55 +132,166 @@ function SidebarGeometry(editor) {
           : param.default;
     });
 
-    Object.keys(config.parameters).forEach((paramName) => {
-      const param = config.parameters[paramName];
+    function getZPlaneData() {
+      return zPlaneInputsRef.flatMap((row) => [
+        row.z.getValue(),
+        row.rInner.getValue(),
+        row.rOuter.getValue(),
+      ]);
+    }
 
-      const row = new UIRow();
-
-      const label = new UIText(param.label).setWidth('90px');
-
-      const control = new UINumber(currentValues[paramName])
-        .setRange(param.min, param.max)
-        .setStep(param.step || 1)
-        .onChange(() => updateGeometry(paramName));
-
-      row.add(label);
-      row.add(control);
-
-      if (param.type === 'angle') {
-        const angleUnit = new UIText('°').setWidth('20px');
-        row.add(angleUnit);
-      }
-
-      uiControls[paramName] = control;
-
-      parametersContainer.add(row);
-    });
-
-    function updateGeometry(changedParam) {
+    function updateGeometry() {
       Object.keys(uiControls).forEach((paramName) => {
-        currentValues[paramName] = uiControls[paramName].getValue();
+        const ctrl = uiControls[paramName];
+        if (ctrl.isZPlane) {
+          currentValues[paramName] = getZPlaneData();
+        } else if (ctrl.isVector3) {
+          currentValues[paramName] = [
+            ctrl.x.getValue(),
+            ctrl.y.getValue(),
+            ctrl.z.getValue(),
+          ];
+        } else {
+          currentValues[paramName] = ctrl.getValue();
+        }
       });
 
       if (config.validate) {
         const validatedValues = config.validate({ ...currentValues });
-
         Object.keys(validatedValues).forEach((paramName) => {
           if (currentValues[paramName] !== validatedValues[paramName]) {
             currentValues[paramName] = validatedValues[paramName];
-            if (uiControls[paramName]) {
-              uiControls[paramName].setValue(validatedValues[paramName]);
+            const ctrl = uiControls[paramName];
+            if (ctrl && !ctrl.isZPlane && !ctrl.isVector3) {
+              ctrl.setValue(validatedValues[paramName]);
+            }
+          }
+
+          // re-resolve dynamic max and min in the same pass
+          const param = config.parameters[paramName];
+          const ctrl = uiControls[paramName];
+          if (ctrl && !ctrl.isZPlane && !ctrl.isVector3) {
+            const resolvedMax =
+              typeof param?.max === 'function'
+                ? param.max(currentValues)
+                : param?.max;
+            const resolvedMin =
+              typeof param?.min === 'function'
+                ? param.min(currentValues)
+                : param?.min;
+            if (resolvedMax !== undefined || resolvedMin !== undefined) {
+              ctrl.setRange(resolvedMin ?? 0, resolvedMax ?? Infinity);
             }
           }
         });
       }
 
-      const newGeometry = config.createGeometry(currentValues);
-
+      currentValues.pName = geometry.parameters.pName || geometry.name;
       editor.execute(
-        new config.SetGeometryCommand(editor, object, newGeometry)
+        new config.SetGeometryCommand(
+          editor,
+          object,
+          config.createGeometry(currentValues)
+        )
       );
     }
+
+    Object.keys(config.parameters).forEach((paramName) => {
+      const param = config.parameters[paramName];
+
+      if (param.type === 'string') return;
+
+      if (param.type === 'info') {
+        const infoRow = new UIRow();
+        const infoText = new UIText(param.label);
+        infoText.dom.style.cssText = 'color:#4a9eda;';
+        infoRow.add(infoText);
+        parametersContainer.add(infoRow);
+        return;
+      }
+
+      if (param.type === 'zplane') {
+        zPlaneContainer = new UIDiv();
+        parametersContainer.add(zPlaneContainer);
+        zPlaneInputsRef = buildZPlaneRows(
+          zPlaneContainer,
+          currentValues.numZPlanes ?? 2,
+          currentValues[paramName] ?? param.default,
+          updateGeometry
+        );
+        uiControls[paramName] = { isZPlane: true };
+        return;
+      }
+
+      const row = new UIRow();
+      row.add(new UIText(param.label).setWidth('90px'));
+
+      if (param.type === 'vector3') {
+        const vals = currentValues[paramName] || [0, 0, 0];
+        const x = new UINumber(vals[0])
+          .setWidth('50px')
+          .onChange(updateGeometry);
+        const y = new UINumber(vals[1])
+          .setWidth('50px')
+          .onChange(updateGeometry);
+        const z = new UINumber(vals[2])
+          .setWidth('50px')
+          .onChange(updateGeometry);
+        addStopPropagation(x);
+        addStopPropagation(y);
+        addStopPropagation(z);
+        row.add(x);
+        row.add(y);
+        row.add(z);
+        parametersContainer.add(row);
+        uiControls[paramName] = { isVector3: true, x, y, z };
+        return;
+      }
+
+      if (param.type === 'integer') {
+        const control = new UIInteger(currentValues[paramName])
+          .setRange(param.min ?? 1, param.max ?? Infinity)
+          .onChange(() => {
+            if (paramName === 'numZPlanes' && zPlaneContainer) {
+              currentValues.numZPlanes = control.getValue();
+              zPlaneInputsRef = buildZPlaneRows(
+                zPlaneContainer,
+                control.getValue(),
+                getZPlaneData(),
+                updateGeometry
+              );
+            }
+            updateGeometry();
+          });
+        addStopPropagation(control);
+        row.add(control);
+        parametersContainer.add(row);
+        uiControls[paramName] = control;
+        return;
+      }
+
+      const resolvedMax =
+        typeof param.max === 'function' ? param.max(currentValues) : param.max;
+      const resolvedMin =
+        typeof param.min === 'function' ? param.min(currentValues) : param.min;
+
+      const control = new UINumber(currentValues[paramName])
+        .setRange(resolvedMin, resolvedMax)
+        .setStep(param.step || 1)
+        .onChange(updateGeometry);
+
+      addStopPropagation(control);
+      row.add(control);
+
+      if (param.type === 'angle') {
+        row.add(new UIText('degree').setWidth('40px'));
+      } else if (param.type === 'number') {
+        row.add(new UIText('cm').setWidth('30px'));
+      }
+
+      uiControls[paramName] = control;
+      parametersContainer.add(row);
+    });
 
     return parametersContainer;
   }
@@ -156,24 +303,11 @@ function SidebarGeometry(editor) {
       const geometry = object.geometry;
 
       container.setDisplay('block');
-
-      if (geometry.type.includes('Geometry2')) {
-        geometryType.setValue(geometry.type.slice(0, -9));
-      } else if (geometry.type[0] === 'a') {
-        geometryType.setValue(geometry.type.slice(1, -8));
-      } else if (geometry.type.includes('Geometry')) {
-        geometryType.setValue(geometry.type.slice(0, -8));
-      } else {
-        geometryType.setValue(geometry.type);
-      }
-
       geometryName.setValue(geometry.name);
 
       if (currentGeometryType !== geometry.type) {
         parameters.clear();
-
         parameters.add(buildGeometryParameters(object));
-
         currentGeometryType = geometry.type;
       }
     } else {
@@ -183,7 +317,6 @@ function SidebarGeometry(editor) {
 
   signals.objectSelected.add(function (object) {
     currentGeometryType = null;
-
     if (object && !object.source && object.geometry) {
       build();
     } else {
