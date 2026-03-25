@@ -214,11 +214,157 @@ export default defineConfig({
           };
         }
 
+        // remove Render from menubar
+        if (id.endsWith('/Menubar.js')) {
+          const cleanCode = code
+            .replace(
+              /import \{ MenubarRender \} from '\.\/Menubar\.Render\.js';\n/,
+              ''
+            )
+            .replace(
+              /\tcontainer\.add\( new MenubarRender\( editor \) \);\n/,
+              ''
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // remove Mesh submenu from Add menu
+        if (id.includes('Menubar.Add.js')) {
+          const cleanCode = code.replace(
+            /\t\/\/ Mesh\n[\s\S]*?\n\n\t\/\/ Light/,
+            '\t// Light'
+          );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // hide frustumCull, renderOrder, userData and export JSON in object sidebar
+        if (
+          id.includes('Sidebar.Object.js') &&
+          !id.includes('Sidebar.Object3D')
+        ) {
+          const cleanCode = code
+            .replace(
+              'container.add( objectFrustumCulledRow );',
+              "objectFrustumCulledRow.setDisplay( 'none' ); container.add( objectFrustumCulledRow );"
+            )
+            .replace(
+              'container.add( objectRenderOrderRow );',
+              "objectRenderOrderRow.setDisplay( 'none' ); container.add( objectRenderOrderRow );"
+            )
+            .replace(
+              'container.add( objectUserDataRow );',
+              "objectUserDataRow.setDisplay( 'none' ); container.add( objectUserDataRow );"
+            )
+            .replace(
+              'container.add( exportJson );',
+              "exportJson.setDisplay( 'none' ); container.add( exportJson );"
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // remove fog controls from scene sidebar
+        if (id.includes('Sidebar.Scene.js')) {
+          const cleanCode = code
+            // hide fog type row
+            .replace(
+              'container.add( fogTypeRow );',
+              "fogTypeRow.setDisplay( 'none' ); container.add( fogTypeRow );"
+            )
+            // hide fog properties row
+            .replace(
+              'container.add( fogPropertiesRow );',
+              "fogPropertiesRow.setDisplay( 'none' ); container.add( fogPropertiesRow );"
+            )
+            // hide environment row
+            .replace(
+              'container.add( environmentRow );',
+              "environmentRow.setDisplay( 'none' ); container.add( environmentRow );"
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // redirect Help menu links
+        if (id.includes('Menubar.Help.js')) {
+          const cleanCode = code
+            .replace(
+              'https://github.com/mrdoob/three.js/tree/master/editor',
+              'https://github.com/jintonic/g4web'
+            )
+            .replace(
+              'https://threejs.org',
+              'https://github.com/jintonic/g4web#readme'
+            )
+            .replace(
+              'https://github.com/mrdoob/three.js/wiki/Editor-Manual',
+              'https://github.com/jintonic/g4web#readme'
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
+        // remove script tab and rename Object/Geometry tabs in sidebar properties
+        if (id.includes('Sidebar.Properties.js')) {
+          const cleanCode = code
+            // rename Object tab to Volume
+            .replace(
+              "strings.getKey( 'sidebar/properties/object' )",
+              "'Volume'"
+            )
+            // rename Geometry tab to Solid
+            .replace(
+              "strings.getKey( 'sidebar/properties/geometry' )",
+              "'Solid'"
+            )
+            // remove SidebarScript import
+            .replace(
+              /import \{ SidebarScript \} from '\.\/Sidebar\.Script\.js';\n/,
+              ''
+            )
+            // remove scriptTab addition
+            .replace(
+              /\tcontainer\.addTab\( 'scriptTab'[\s\S]*?new SidebarScript\( editor \) \);\n/,
+              ''
+            )
+            // remove scriptTab variable
+            .replace(
+              /\tconst scriptTab = getTabByTabId\( container\.tabs, 'scriptTab' \);\n/,
+              ''
+            )
+            // remove scriptTab visibility toggle
+            .replace(
+              /\n\t\tscriptTab\.setHidden\( object === editor\.camera \);/,
+              ''
+            )
+            // remove scriptTab fallback selection
+            .replace(
+              /\} else if \( container\.selected === 'scriptTab' \) \{\n\n\t\t\tcontainer\.select\( scriptTab\.isHidden\(\) \? 'objectTab' : 'scriptTab' \);\n\n\t\t\}/,
+              '}'
+            );
+          return {
+            code: cleanCode,
+            map: null,
+          };
+        }
         // move ViewHelper to bottom right
         if (id.includes('Viewport.ViewHelper.js')) {
           const cleanCode = code
             /* Change the interaction logic anchor */
             .replace(/this\.location\.top = 30;/g, 'this.location.bottom = 0;')
+
+            /* Add X, Y, Z labels to the axis dots */
+            .replace(
+              /this\.location\.bottom = 0;/g,
+              "this.location.bottom = 0;\n\t\tthis.setLabels( 'X', 'Y', 'Z' );"
+            )
 
             /* Change the UI Panel positioning */
             .replace(
