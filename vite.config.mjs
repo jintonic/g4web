@@ -314,16 +314,6 @@ export default defineConfig({
         // remove script tab and rename Object/Geometry tabs in sidebar properties
         if (id.includes('Sidebar.Properties.js')) {
           const cleanCode = code
-            // rename Object tab to Volume
-            .replace(
-              "strings.getKey( 'sidebar/properties/object' )",
-              "'Volume'"
-            )
-            // rename Geometry tab to Solid
-            .replace(
-              "strings.getKey( 'sidebar/properties/geometry' )",
-              "'Solid'"
-            )
             // remove SidebarScript import
             .replace(
               /import \{ SidebarScript \} from '\.\/Sidebar\.Script\.js';\n/,
