@@ -1,25 +1,59 @@
 {
   "name": "@chitrashensah/geant4-csg",
-  "version": "0.1.0",
-  "description": "Geant4 constructive solid geometry (CSG) implementation for Three.js",
+  "version": "0.1.4",
+  "description": "Geant4 solid geometries for Three.js - detector modeling",
   "type": "module",
-  "main": "./index.js",
+  "main": "./src/index.js",
   "exports": {
-    ".": "./index.js",
-    "./utils": "./src/utils.js"
+    ".": "./src/index.js"
   },
+  "files": [
+    "src/",
+    "images/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "test": "node --test",
-    "lint": "prettier --check ."
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jintonic/g4web.git",
+    "directory": "packages/geant4-csg"
   },
   "keywords": [
     "geant4",
-    "csg",
+    "geometry",
     "threejs",
-    "geometry"
+    "three",
+    "physics",
+    "simulation",
+    "particle-physics",
+    "csg",
+    "constructive-solid-geometry",
+    "detector",
+    "detector-modeling",
+    "scientific-computing",
+    "solid-geometry"
   ],
-  "author": "https://github.com/chitrashensah",
-  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "Chitrashen Sah",
+    "email": "chitrashensah@gmail.com",
+    "url": "https://github.com/chitrashensah"
+  },
+  "contributors": [
+    {
+      "name": "Sean Bradley",
+      "url": "https://github.com/Sean-Bradley/THREE-CSGMesh",
+      "note": "CSG implementation (MIT License)"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jintonic/g4web/issues"
+  },
+  "homepage": "https://github.com/jintonic/g4web/tree/main/packages/geant4-csg#readme",
   "publishConfig": {
     "access": "public"
   },

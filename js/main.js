@@ -9,12 +9,14 @@ import { Menubar } from 'three/editor/js/Menubar.js';
 import { Toolbar } from 'three/editor/js/Toolbar.js';
 import { Sidebar } from 'three/editor/js/Sidebar.js';
 import { Resizer } from 'three/editor/js/Resizer.js';
+import { LeftPanelSolids } from './Leftbar.js';
 
 const viewport = new Viewport(editor);
 const menubar = new Menubar(editor);
 const toolbar = new Toolbar(editor);
 const sidebar = new Sidebar(editor);
 const resizer = new Resizer(editor);
+const leftPanelSolids = new LeftPanelSolids(editor);
 
 // keep everything above viewport
 document.body.appendChild(viewport.dom);
@@ -22,6 +24,7 @@ document.body.appendChild(menubar.dom);
 document.body.appendChild(toolbar.dom);
 document.body.appendChild(sidebar.dom);
 document.body.appendChild(resizer.dom);
+document.body.appendChild(leftPanelSolids.dom);
 
 import * as THREE from 'three';
 window.THREE = THREE;

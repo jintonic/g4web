@@ -1,20 +1,228 @@
-/* Position Toolbar at Top Middle */
 #toolbar {
   position: absolute;
-  top: 40px; /* Distance from the top */
-  left: 50%; /* Move to horizontal center */
-  transform: translateX(
-    -50%
-  ); /* Offset by half its own width for perfect centering */
-  bottom: auto; /* Override default bottom: 20px */
+  top: 40px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: auto !important;
 
-  /* Preserve your existing styling */
   height: 32px;
   display: flex;
   align-items: center;
   gap: 2px;
   border-radius: 6px;
-  z-index: 10; /* Ensure it stays above the 3D canvas */
+  border: 3px solid #333 !important;
+  z-index: 10;
+}
+
+#leftpanel {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 210px;
+  height: calc(100vh - 36px);
+  overflow: auto;
+  background: #eee;
+  z-index: 0;
+}
+
+.Panel-section {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.Panel-header {
+  color: #444;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 10px;
+  background: #ddd;
+  border-bottom: 1px solid #ccc;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.Panel-header:hover {
+  background: #d5d5d5;
+}
+
+.Category-widget {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+  color: #888;
+}
+
+.Category-item {
+  display: block;
+  width: 82px;
+  height: 82px;
+  background-size: 82px 82px;
+  overflow: hidden;
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 0px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #1b1b1b;
+  position: relative;
+}
+
+.Category-item:hover {
+  border-color: #08f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Category-item div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 2px 0;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 12px;
+  color: rgb(4, 20, 34);
+}
+
+.Category-item.no-image {
+  background-color: #e8e8e8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Category-item.no-image::before {
+  content: '●';
+  font-size: 24px;
+  color: #ccc;
+}
+
+#viewport {
+  left: 210px !important;
+}
+
+#script {
+  left: 210px !important;
+}
+
+#player {
+  left: 210px !important;
+}
+
+@media all and (max-width: 600px) {
+  #leftpanel {
+    display: none;
+  }
+
+  #toolbar {
+    top: 40px !important;
+  }
+
+  #viewport {
+    left: 0 !important;
+    top: 80px !important;
+    height: calc(100% - 436px) !important;
+  }
+
+  #script {
+    left: 0 !important;
+    top: 80px !important;
+    height: calc(100% - 436px) !important;
+  }
+
+  #player {
+    left: 0 !important;
+    top: 80px !important;
+    height: calc(100% - 436px) !important;
+  }
+
+  #sidebar {
+    top: calc(100% - 320px) !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #leftpanel {
+    background-color: #111;
+  }
+
+  .Panel-section {
+    border-bottom-color: #222;
+  }
+
+  .Panel-header {
+    color: #aaa;
+    background: #1a1a1a;
+    border-bottom-color: #222;
+  }
+
+  .Panel-header:hover {
+    background: #222;
+  }
+
+  .Category-widget {
+    color: #888;
+  }
+
+  .Category-item {
+    border-color: #444;
+    color: #888;
+  }
+
+  .Category-item:hover {
+    border-color: #08f;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .Category-item div {
+    background-color: transparent;
+    color: #fff;
+  }
+
+  .Category-item.no-image {
+    background-color: #222;
+  }
+
+  .Category-item.no-image::before {
+    color: #444;
+  }
+}
+
+#leftpanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#leftpanel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#leftpanel::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#leftpanel::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+  #leftpanel::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  #leftpanel::-webkit-scrollbar-thumb {
+    background: #444;
+  }
+
+  #leftpanel::-webkit-scrollbar-thumb:hover {
+    background: #666;
+  }
 }
 
 /* ── Sidebar Material Panel ── */
