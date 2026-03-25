@@ -6,7 +6,6 @@
   bottom: auto !important;
 
   height: 32px;
-  background: #333 !important;
   display: flex;
   align-items: center;
   gap: 2px;
@@ -224,4 +223,26 @@
   #leftpanel::-webkit-scrollbar-thumb:hover {
     background: #666;
   }
+}
+
+/* ── Sidebar Material Panel ── */
+
+#g4MaterialPanel {
+  border-top: 0;
+  padding-top: 20px;
+}
+
+#g4MaterialPanel .G4MaterialSlot {
+  width: 170px;
+  font-size: 12px;
+}
+
+#g4MaterialPanel .G4MaterialSelect {
+  width: 150px;
+  font-size: 12px;
+}
+
+#g4MaterialPanel .G4MaterialDisplay {
+  width: 150px;
+  font-size: 12px;
 }
