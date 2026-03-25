@@ -269,6 +269,12 @@ export default defineConfig({
             /* Change the interaction logic anchor */
             .replace(/this\.location\.top = 30;/g, 'this.location.bottom = 0;')
 
+            /* Add X, Y, Z labels to the axis dots */
+            .replace(
+              /this\.location\.bottom = 0;/g,
+              "this.location.bottom = 0;\n\t\tthis.setLabels( 'X', 'Y', 'Z' );"
+            )
+
             /* Change the UI Panel positioning */
             .replace(
               /panel\.setTop\( '30px' \);/g,
