@@ -1,25 +1,27 @@
 #toolbar {
   position: absolute;
-  top: 40px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  bottom: auto !important;
+  top: 40px;
+  left: 36%;
+  transform: translateX(-50%);
+  bottom: auto;
 
   height: 32px;
   display: flex;
   align-items: center;
   gap: 2px;
-  border-radius: 6px;
-  border: 3px solid #333 !important;
   z-index: 10;
+}
+
+#menubar {
+  z-index: 20;
 }
 
 #leftpanel {
   position: absolute;
   top: 36px;
   left: 0;
+  bottom: 0;
   width: 210px;
-  height: calc(100vh - 36px);
   overflow: auto;
   background: #eee;
   z-index: 0;
@@ -103,48 +105,73 @@
   color: #ccc;
 }
 
-#viewport {
-  left: 210px !important;
-}
-
-#script {
-  left: 210px !important;
-}
-
+#viewport,
+#script,
 #player {
-  left: 210px !important;
+  left: 210px;
 }
 
 @media all and (max-width: 600px) {
   #leftpanel {
-    display: none;
+    width: 100px;
+    height: auto;
+    bottom: 320px;
+    z-index: 1;
   }
 
-  #toolbar {
-    top: 40px !important;
+  .Panel-header {
+    padding: 8px 6px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
   }
 
-  #viewport {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+  .Category-widget {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 6px;
   }
 
-  #script {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+  .Category-item {
+    width: auto;
+    height: auto;
+    aspect-ratio: 1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
+  .Category-item div {
+    font-size: 10px;
+  }
+
+  #viewport,
+  #script,
   #player {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+    left: 100px;
+    bottom: 320px;
+    height: auto;
   }
 
   #sidebar {
-    top: calc(100% - 320px) !important;
+    z-index: 2;
   }
+}
+
+#leftpanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#leftpanel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#leftpanel::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#leftpanel::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -181,8 +208,7 @@
   }
 
   .Category-item div {
-    background-color: transparent;
-    color: #fff;
+    color: #111;
   }
 
   .Category-item.no-image {
@@ -192,26 +218,7 @@
   .Category-item.no-image::before {
     color: #444;
   }
-}
 
-#leftpanel::-webkit-scrollbar {
-  width: 8px;
-}
-
-#leftpanel::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-#leftpanel::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-#leftpanel::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-@media (prefers-color-scheme: dark) {
   #leftpanel::-webkit-scrollbar-track {
     background: #0a0a0a;
   }
@@ -237,11 +244,7 @@
   font-size: 12px;
 }
 
-#g4MaterialPanel .G4MaterialSelect {
-  width: 150px;
-  font-size: 12px;
-}
-
+#g4MaterialPanel .G4MaterialSelect,
 #g4MaterialPanel .G4MaterialDisplay {
   width: 150px;
   font-size: 12px;
