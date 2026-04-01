@@ -110,18 +110,6 @@ export default defineConfig({
     {
       name: 'modify-threejs-editor-code',
       transform(code, id) {
-        if (id.includes('Sidebar.Scene.js')) {
-          const cleanCode = code.replace(
-            `container.setPaddingTop( '20px' );`,
-            `container.setPaddingTop( '20px' );
-
-          const gridInfoBanner = document.createElement('div');
-          gridInfoBanner.textContent = 'The grid is 30×30 cm, each square = 1 cm.';
-          container.dom.appendChild(gridInfoBanner);`
-          );
-          return { code: cleanCode, map: null };
-        }
-
         if (id.includes('Editor.js')) {
           const cleanCode = code.replace(
             `var loader = new THREE.ObjectLoader();`,
@@ -262,6 +250,14 @@ export default defineConfig({
             .replace(
               'container.add( exportJson );',
               "exportJson.setDisplay( 'none' ); container.add( exportJson );"
+            )
+            .replace(
+              'container.add( objectTypeRow );',
+              '// container.add( objectTypeRow );'
+            )
+            .replace(
+              'container.add( objectUUIDRow );',
+              '// container.add( objectUUIDRow );'
             );
           return {
             code: cleanCode,
@@ -271,23 +267,43 @@ export default defineConfig({
         // remove fog controls from scene sidebar
         if (id.includes('Sidebar.Scene.js')) {
           const cleanCode = code
-            // hide fog type row
+            .replace(
+              `import { UIPanel, UIBreak, UIRow, UIColor, UISelect, UIText, UINumber } from './libs/ui.js';`,
+              `import { UIPanel, UIBreak, UIRow, UIColor, UISelect, UIText, UINumber, UIButton } from './libs/ui.js';`
+            )
+            .replace(
+              `container.setPaddingTop( '20px' );`,
+              `container.setPaddingTop( '20px' );
+                const gridInfoBanner = document.createElement('div');
+                gridInfoBanner.textContent = 'The grid is 60×60 cm, each square = 1 cm.';
+                container.dom.appendChild(gridInfoBanner);`
+            )
             .replace(
               'container.add( fogTypeRow );',
               "fogTypeRow.setDisplay( 'none' ); container.add( fogTypeRow );"
             )
-            // hide fog properties row
             .replace(
               'container.add( fogPropertiesRow );',
               "fogPropertiesRow.setDisplay( 'none' ); container.add( fogPropertiesRow );"
             )
-            // hide environment row
             .replace(
               'container.add( environmentRow );',
               "environmentRow.setDisplay( 'none' ); container.add( environmentRow );"
             );
+          return { code: cleanCode, map: null };
+        }
+
+        if (id.includes('Viewport.js')) {
           return {
-            code: cleanCode,
+            code: code
+              .replace(
+                'new THREE.GridHelper( 30, 30 )',
+                'new THREE.GridHelper( 60, 60 )'
+              )
+              .replace(
+                'new THREE.GridHelper( 30, 6 )',
+                'new THREE.GridHelper( 60, 12 )'
+              ),
             map: null,
           };
         }

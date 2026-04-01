@@ -36,7 +36,6 @@ class G4Hype extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4Hype';
-    this.name = pName || 'G4Hype';
 
     const innerStereoRad = (pInnerStereo * Math.PI) / 180;
     const outerStereoRad = (pOuterStereo * Math.PI) / 180;
@@ -86,6 +85,7 @@ class G4Hype extends THREE.BufferGeometry {
       pOuterStereo,
       pDz,
     };
+    this.name = pName || 'G4Hype';
   }
 
   static getEditorConfig() {
@@ -94,7 +94,7 @@ class G4Hype extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Hype',
+          default: 'hype',
           geometryKey: 'pName',
         },
         pInnerRadius: {

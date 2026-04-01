@@ -27,7 +27,6 @@ class G4TwistedBox extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4TwistedBox';
-    this.name = pName || 'G4TwistedBox';
 
     const geometry = new THREE.BoxGeometry(
       pDz * 2,
@@ -66,6 +65,7 @@ class G4TwistedBox extends THREE.BufferGeometry {
     finalGeometry.parameters = { pName, pTwistedAngle, pDx, pDy, pDz };
 
     Object.assign(this, finalGeometry);
+    this.name = pName || 'G4TwistedBox';
   }
 
   static getEditorConfig() {
@@ -74,7 +74,7 @@ class G4TwistedBox extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'TwistedBox',
+          default: 'twistedBox',
           geometryKey: 'pName',
         },
         pDx: {

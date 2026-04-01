@@ -27,7 +27,6 @@ class G4TwistedTubs extends THREE.BufferGeometry {
     super();
 
     this.type = 'G4TwistedTubs';
-    this.name = pName || 'G4TwistedTubs';
 
     const numSide = 120;
     const halfDPhi = pDPhi / 2;
@@ -235,6 +234,7 @@ class G4TwistedTubs extends THREE.BufferGeometry {
       pSPhi,
       pDPhi,
     };
+    this.name = pName || 'G4TwistedTubs';
   }
 
   static getEditorConfig() {
@@ -243,7 +243,7 @@ class G4TwistedTubs extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'TwistedTubs',
+          default: 'twistedTubs',
           geometryKey: 'pName',
         },
         pTwistedAngle: {

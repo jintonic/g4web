@@ -29,7 +29,6 @@ class G4Trd extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4Trd';
-    this.name = pName || 'G4Trd';
 
     const maxWidth = Math.max(pDx1, pDx2);
     const maxHeight = Math.max(pDy1, pDy2);
@@ -58,6 +57,7 @@ class G4Trd extends THREE.BufferGeometry {
 
     Object.assign(this, boxGeometry);
     this.parameters = { pName, pDx1, pDx2, pDy1, pDy2, pDz };
+    this.name = pName || 'G4Trd';
   }
 
   static getEditorConfig() {
@@ -66,7 +66,7 @@ class G4Trd extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Trd',
+          default: 'trd',
           geometryKey: 'pName',
         },
         pDx1: {

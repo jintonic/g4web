@@ -25,7 +25,6 @@ class G4Polycone extends THREE.BufferGeometry {
     super();
 
     this.type = 'G4Polycone';
-    this.name = pName || 'G4Polycone';
 
     const z = [],
       rInner = [],
@@ -192,6 +191,7 @@ class G4Polycone extends THREE.BufferGeometry {
       numZPlanes,
       zPlaneData: zPlaneData.slice(),
     };
+    this.name = pName || 'G4Polycone';
   }
 
   static getEditorConfig() {
@@ -200,7 +200,7 @@ class G4Polycone extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Polycone',
+          default: 'polycone',
           geometryKey: 'pName',
         },
         pSPhi: {

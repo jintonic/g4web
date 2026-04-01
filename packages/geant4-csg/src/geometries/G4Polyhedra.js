@@ -23,7 +23,6 @@ class G4Polyhedra extends THREE.BufferGeometry {
     super();
 
     this.type = 'G4Polyhedra';
-    this.name = pName || 'G4Polyhedra';
 
     const z = [],
       rInner = [],
@@ -190,6 +189,7 @@ class G4Polyhedra extends THREE.BufferGeometry {
       numZPlanes,
       zPlaneData: zPlaneData.slice(),
     };
+    this.name = pName || 'G4Polyhedra';
   }
 
   static getEditorConfig() {
@@ -198,7 +198,7 @@ class G4Polyhedra extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Polyhedra',
+          default: 'polyhedra',
           geometryKey: 'pName',
         },
         pSPhi: {

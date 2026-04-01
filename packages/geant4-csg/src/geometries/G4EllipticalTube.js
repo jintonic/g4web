@@ -28,7 +28,6 @@ class G4EllipticalTube extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4EllipticalTube';
-    this.name = pName || 'G4EllipticalTube';
 
     const ratioZ = pDy / pDx;
     const cylinderGeometry = new THREE.CylinderGeometry(pDx, pDx, pDz * 2, 64);
@@ -46,6 +45,7 @@ class G4EllipticalTube extends THREE.BufferGeometry {
     finalGeometry.parameters = { pName, pDx, pDy, pDz };
 
     Object.assign(this, finalGeometry);
+    this.name = pName || 'G4EllipticalTube';
   }
 
   static getEditorConfig() {
@@ -54,7 +54,7 @@ class G4EllipticalTube extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'EllipticalTube',
+          default: 'ellipticalTube',
           geometryKey: 'pName',
         },
         pDx: {

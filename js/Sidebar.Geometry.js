@@ -71,7 +71,7 @@ function SidebarGeometry(editor) {
   geometryTypeRow.add(new UIText('Type').setWidth('90px'));
   geometryTypeRow.add(geometryType);
 
-  container.add(geometryTypeRow);
+  // container.add(geometryTypeRow);
 
   const geometryNameRow = new UIRow();
   const geometryName = new UIInput().onChange(function () {

@@ -50,7 +50,6 @@ class G4Trap extends THREE.BufferGeometry {
     if (pDx4 <= 0) pDx4 = 0.01;
 
     this.type = 'G4Trap';
-    this.name = pName || 'G4Trap';
 
     const thetaRad = (pTheta * Math.PI) / 180;
     const phiRad = (pPhi * Math.PI) / 180;
@@ -110,6 +109,7 @@ class G4Trap extends THREE.BufferGeometry {
       pDx4,
       pAlpha2,
     };
+    this.name = pName || 'G4Trap';
   }
 
   static getEditorConfig() {
@@ -118,7 +118,7 @@ class G4Trap extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Trap',
+          default: 'trap',
           geometryKey: 'pName',
         },
         _info: {

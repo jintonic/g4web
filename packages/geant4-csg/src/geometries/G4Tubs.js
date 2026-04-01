@@ -28,7 +28,6 @@ class G4Tubs extends THREE.BufferGeometry {
     if (pDPhi <= 0) pDPhi = 1;
 
     this.type = 'G4Tubs';
-    this.name = pName || 'G4Tubs';
 
     const pSPhi_rad = (Math.PI * pSPhi) / 180;
     const pDPhi_rad = (Math.PI * pDPhi) / 180;
@@ -67,6 +66,7 @@ class G4Tubs extends THREE.BufferGeometry {
     finalGeometry.parameters = { pName, pRmin, pRmax, pDz, pSPhi, pDPhi };
 
     Object.assign(this, finalGeometry);
+    this.name = pName || 'G4Tubs';
   }
 
   static getEditorConfig() {
@@ -75,7 +75,7 @@ class G4Tubs extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Tubs',
+          default: 'tubs',
           geometryKey: 'pName',
         },
         pRmax: {

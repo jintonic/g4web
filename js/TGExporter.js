@@ -28,7 +28,6 @@ class TGExporter {
     let colorText = '';
     let placeText = '';
     let rotationText = '';
-    let variableText = '';
     let customMaterialText = '';
 
     if (modelCount > 0) {
@@ -43,123 +42,103 @@ class TGExporter {
 
         switch (type) {
           case 'G4Box':
-            variableText += `// Half x, Half y, Half z\n`;
             rotationText += rot;
-            solidText += `:solid ${name} BOX ${p.pX}*cm ${p.pY}*cm ${p.pZ}*cm\n`;
+            solidText += `// Half x, Half y, Half z\n:solid ${name} BOX ${p.pX}*cm ${p.pY}*cm ${p.pZ}*cm\n\n`;
             break;
 
           case 'G4Sphere':
-            variableText += `// inner, outer radius, starting/delta phi, starting/delta theta\n`;
             rotationText += rot;
-            solidText += `:solid ${name} SPHERE ${p.pRMin}*cm ${p.pRMax}*cm ${p.pSPhi} ${p.pDPhi} ${p.pSTheta} ${p.pDTheta}\n`;
+            solidText += `// inner, outer radius, starting/delta phi, starting/delta theta\n:solid ${name} SPHERE ${p.pRmin}*cm ${p.pRmax}*cm ${p.pSPhi} ${p.pDPhi} ${p.pSTheta} ${p.pDTheta}\n\n`;
             break;
 
           case 'G4Tubs':
-            variableText += `// Rin, Rout, half z, start phi, dphi in degree\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TUBS ${p.pRMin}*cm ${p.pRMax}*cm ${p.pDz}*cm ${p.pSPhi} ${p.pDPhi}\n`;
+            solidText += `// Rin, Rout, half z, start phi, dphi in degree\n:solid ${name} TUBS ${p.pRmin}*cm ${p.pRmax}*cm ${p.pDz}*cm ${p.pSPhi} ${p.pDPhi}\n\n`;
             break;
 
           case 'G4Cons':
-            variableText += `// Rin at -z/2, Rout at -z/2, Rin at z/2, Rout at z/2, z/2, start phi, dphi\n`;
             rotationText += rot;
-            solidText += `:solid ${name} CONS ${p.pRmin2}*cm ${p.pRmax2}*cm ${p.pRmin1}*cm ${p.pRmax1}*cm ${p.pDz}*cm ${p.pSPhi} ${p.pDPhi}\n`;
+            solidText += `// Rin at -z/2, Rout at -z/2, Rin at z/2, Rout at z/2, z/2, start phi, dphi\n:solid ${name} CONS ${p.pRmin2}*cm ${p.pRmax2}*cm ${p.pRmin1}*cm ${p.pRmax1}*cm ${p.pDz}*cm ${p.pSPhi} ${p.pDPhi}\n\n`;
             break;
 
           case 'G4Para':
-            variableText += `// half x, y, z in cm, alpha, theta, phi in degrees\n`;
             rotationText += rot;
-            solidText += `:solid ${name} PARA ${p.dx}*cm ${p.dy}*cm ${p.dz}*cm ${p.alpha} ${p.theta} ${p.phi}\n`;
+            solidText += `// half x, y, z in cm, alpha, theta, phi in degrees\n:solid ${name} PARA ${p.pDx}*cm ${p.pDy}*cm ${p.pDz}*cm ${p.pAlpha} ${p.pTheta} ${p.pPhi}\n\n`;
             break;
 
           case 'G4Trd':
-            variableText += `// half (X at -dz, X at +dz, Y at -dz, Y at +dz, dz)\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TRD ${p.dx1}*cm ${p.dx2}*cm ${p.dy1}*cm ${p.dy2}*cm ${p.dz}*cm\n`;
+            solidText += `// half (X at -dz, X at +dz, Y at -dz, Y at +dz, dz)\n:solid ${name} TRD ${p.pDx1}*cm ${p.pDx2}*cm ${p.pDy1}*cm ${p.pDy2}*cm ${p.pDz}*cm\n\n`;
             break;
 
           case 'G4Trap':
-            variableText += `// pDz, pTheta, pPhi, pDy1, pDx1, pDx2, pAlp1, pDy2, pDx3, pDx4, pAlp2\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TRAP ${p.pDz}*cm ${p.pTheta} ${p.pPhi} ${p.pDy1}*cm ${p.pDx1}*cm ${p.pDx2}*cm ${p.pAlpha1} ${p.pDy2}*cm ${p.pDx3}*cm ${p.pDx4}*cm ${p.pAlpha2}\n`;
+            solidText += `// pDz, pTheta, pPhi, pDy1, pDx1, pDx2, pAlp1, pDy2, pDx3, pDx4, pAlp2\n:solid ${name} TRAP ${p.pDz}*cm ${p.pTheta} ${p.pPhi} ${p.pDy1}*cm ${p.pDx1}*cm ${p.pDx2}*cm ${p.pAlpha1} ${p.pDy2}*cm ${p.pDx3}*cm ${p.pDx4}*cm ${p.pAlpha2}\n\n`;
             break;
 
           case 'G4Trap4':
-            variableText += `// half z, half y, half x, x at top\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TRAP ${p.pZ}*cm ${p.pY}*cm ${p.pX}*cm ${p.pLTX}*cm\n`;
+            solidText += `// half z, half y, half x, x at top\n:solid ${name} TRAP ${p.pZ}*cm ${p.pY}*cm ${p.pX}*cm ${p.pLTX}*cm\n\n`;
             break;
 
           case 'G4Torus':
-            variableText += `// inner radius, outer radius, swept radius, starting phi, delta phi\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TORUS ${p.pRMin}*cm ${p.pRMax}*cm ${p.pRTor}*cm ${p.pSPhi} ${p.pDPhi}\n`;
+            solidText += `// inner radius, outer radius, swept radius, starting phi, delta phi\n:solid ${name} TORUS ${p.pRmin}*cm ${p.pRmax}*cm ${p.pRtor}*cm ${p.pSPhi} ${p.pDPhi}\n\n`;
             break;
 
           case 'G4EllipticalTube':
-            variableText += `// half x, y, z\n`;
             rotationText += rot;
-            solidText += `:solid ${name} ELLIPTICALTUBE ${p.dx}*cm ${p.dy}*cm ${p.dz}*cm\n`;
+            solidText += `// half x, y, z\n:solid ${name} ELLIPTICALTUBE ${p.pDx}*cm ${p.pDy}*cm ${p.pDz}*cm\n\n`;
             break;
 
           case 'G4Ellipsoid':
-            variableText += `// semi axis x, y, z, z bottom cut, z top cut\n`;
             rotationText += rot;
-            solidText += `:solid ${name} ELLIPSOID ${p.xSemiAxis}*cm ${p.ySemiAxis}*cm ${p.zSemiAxis}*cm ${p.zBottomCut}*cm ${p.zTopCut}*cm\n`;
+            solidText += `// semi axis x, y, z, z bottom cut, z top cut\n:solid ${name} ELLIPSOID ${p.pSemiAxisX}*cm ${p.pSemiAxisY}*cm ${p.pSemiAxisZ}*cm ${p.pZBottomCut}*cm ${p.pZTopCut}*cm\n\n`;
             break;
 
           case 'G4EllipticalCone':
-            variableText += `// scaling x, y, z apex, z top plane\n`;
             rotationText += rot;
-            solidText += `:solid ${name} ELLIPTICALCONE ${p.xSemiAxis}/${(p.zHeight + p.zTopCut) * 10}*cm ${p.ySemiAxis}/${(p.zHeight + p.zTopCut) * 10}*cm ${p.zHeight}*cm ${p.zTopCut}*cm\n`;
+            solidText += `// scaling x, y, z apex, z top plane\n:solid ${name} ELLIPTICALCONE ${p.pSemiAxisX}/${(p.pHeight + p.pZTopCut) * 10}*cm ${p.pSemiAxisY}/${(p.pHeight + p.pZTopCut) * 10}*cm ${p.pHeight}*cm ${p.pZTopCut}*cm\n\n`;
             break;
 
           case 'G4TwistedBox':
-            variableText += `// twist angle in degree, half x, y, z in cm\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TWISTEDBOX ${p.twistedAngle}*degree ${p.pDx}*cm ${p.pDy}*cm ${p.pDz}*cm\n`;
+            solidText += `// twist angle in degree, half x, y, z in cm\n:solid ${name} TWISTEDBOX ${p.pTwistedAngle}*degree ${p.pDx}*cm ${p.pDy}*cm ${p.pDz}*cm\n\n`;
             break;
 
           case 'G4TwistedTrd':
-            variableText += `// half (x at -dz, x at +dz, y at -dz, y at +dz, z, angle)\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TWISTEDTRD ${p.dx1}*cm ${p.dx2}*cm ${p.dy1}*cm ${p.dy2}*cm ${p.dz}*cm ${p.twistedAngle}*degree\n`;
+            solidText += `// half (x at -dz, x at +dz, y at -dz, y at +dz, z, angle)\n:solid ${name} TWISTEDTRD ${p.pDx1}*cm ${p.pDx2}*cm ${p.pDy1}*cm ${p.pDy2}*cm ${p.pDz}*cm ${p.pTwistedAngle}*degree\n\n`;
             break;
 
           case 'G4TwistedTrap':
-            variableText += `// twisted angle, half dz, theta, phi, dy1, dx1, dx2, dy2, dx3, dx4, alpha\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TWISTEDTRAP ${p.twistedAngle}*degree ${p.dz}*cm ${p.theta}*degree ${p.phi}*degree ${p.dy1}*cm ${p.dx1}*cm ${p.dx2}*cm ${p.dy2}*cm ${p.dx3}*cm ${p.dx4}*cm ${p.alpha}*degree\n`;
+            solidText += `// twisted angle, half dz, theta, phi, dy1, dx1, dx2, dy2, dx3, dx4, alpha\n:solid ${name} TWISTEDTRAP ${p.pTwistedAngle}*degree ${p.pDz}*cm ${p.pTheta}*degree ${p.pPhi}*degree ${p.pDy1}*cm ${p.pDx1}*cm ${p.pDx2}*cm ${p.pDy2}*cm ${p.pDx3}*cm ${p.pDx4}*cm ${p.pAlpha}*degree\n\n`;
             break;
 
           case 'G4TwistedTubs':
-            variableText += `// twist angle, Rin, Rout, half z, dphi\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TWISTEDTUBS ${p.twistedAngle}*degree ${p.pRMin}*cm ${p.pRMax}*cm ${p.pDz}*cm ${p.pDPhi}*degree\n`;
+            solidText += `// twist angle, Rin, Rout, half z, dphi\n:solid ${name} TWISTEDTUBS ${p.pTwistedAngle}*degree ${p.pRmin}*cm ${p.pRmax}*cm ${p.pDz}*cm ${p.pDPhi}*degree\n\n`;
             break;
 
           case 'G4Tet':
-            variableText += `// anchor point, point 2, 3, 4\n`;
             rotationText += rot;
-            solidText += `:solid ${name} TET ${p.anchor[0].toFixed(7)}*cm ${p.anchor[1].toFixed(7)}*cm ${p.anchor[2].toFixed(7)}*cm ${p.pP2[0].toFixed(7)}*cm ${p.pP2[1].toFixed(7)}*cm ${p.pP2[2].toFixed(7)}*cm ${p.pP3[0].toFixed(7)}*cm ${p.pP3[1].toFixed(7)}*cm ${p.pP3[2].toFixed(7)}*cm ${p.pP4[0].toFixed(7)}*cm ${p.pP4[1].toFixed(7)}*cm ${p.pP4[2].toFixed(7)}*cm\n`;
+            solidText += `// anchor point, point 2, 3, 4\n:solid ${name} TET ${p.anchor[0].toFixed(7)}*cm ${p.anchor[1].toFixed(7)}*cm ${p.anchor[2].toFixed(7)}*cm ${p.pP2[0].toFixed(7)}*cm ${p.pP2[1].toFixed(7)}*cm ${p.pP2[2].toFixed(7)}*cm ${p.pP3[0].toFixed(7)}*cm ${p.pP3[1].toFixed(7)}*cm ${p.pP3[2].toFixed(7)}*cm ${p.pP4[0].toFixed(7)}*cm ${p.pP4[1].toFixed(7)}*cm ${p.pP4[2].toFixed(7)}*cm\n\n`;
             break;
 
           case 'G4Hype':
-            variableText += `// inner radius, outer radius, inner stereo angle, outer stereo angle, half z\n`;
             rotationText += rot;
-            solidText += `:solid ${name} HYPE ${p.innerRadius}*cm ${p.outerRadius}*cm ${p.innerStereo} ${p.outerStereo} ${p.pDz}*cm\n`;
+            solidText += `// inner radius, outer radius, inner stereo angle, outer stereo angle, half z\n:solid ${name} HYPE ${p.pInnerRadius}*cm ${p.pOuterRadius}*cm ${p.pInnerStereo} ${p.pOuterStereo} ${p.pDz}*cm\n\n`;
             break;
 
           case 'G4Polycone':
-            variableText += `// start phi, dphi in degree, # of z planes, (z rInner rOuter ...)\n`;
             rotationText += rot;
-            solidText += `:solid ${name} POLYCONE ${p.pSPhi} ${p.pDPhi} ${p.numZPlanes} ${formatZPlaneData(p.zPlaneData)}\n`;
+            solidText += `// start phi, dphi in degree, # of z planes, (z rInner rOuter ...)\n:solid ${name} POLYCONE ${p.pSPhi} ${p.pDPhi} ${p.numZPlanes} ${formatZPlaneData(p.zPlaneData)}\n\n`;
             break;
 
           case 'G4Polyhedra':
-            variableText += `// start phi, dphi in degree, # of sides, # of z planes, (z rInner rOuter ...)\n`;
             rotationText += rot;
-            solidText += `:solid ${name} POLYHEDRA ${p.pSPhi} ${p.pDPhi} ${p.numSide} ${p.numZPlanes} ${formatZPlaneData(p.zPlaneData)}\n`;
+            solidText += `// start phi, dphi in degree, # of sides, # of z planes, (z rInner rOuter ...)\n:solid ${name} POLYHEDRA ${p.pSPhi} ${p.pDPhi} ${p.numSide} ${p.numZPlanes} ${formatZPlaneData(p.zPlaneData)}\n\n`;
             break;
 
           default:
@@ -232,7 +211,6 @@ class TGExporter {
         sceneText += `// Custom material definitions\n${customMaterialText}\n`;
       }
       sceneText += `${rotationText || ':rotm r000 0 0 0'}\n`;
-      sceneText += `${variableText}\n`;
       sceneText += `${solidText}\n`;
       sceneText += `${voluText}\n`;
       sceneText += `${colorText}\n`;

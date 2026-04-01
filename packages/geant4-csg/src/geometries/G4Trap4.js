@@ -27,7 +27,6 @@ class G4Trap4 extends THREE.BufferGeometry {
     if (pLTX < 0) pLTX = 0;
 
     this.type = 'G4Trap4';
-    this.name = 'box';
 
     const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
     const positions = boxGeometry.attributes.position.array;
@@ -59,6 +58,7 @@ class G4Trap4 extends THREE.BufferGeometry {
     this.setIndex(boxGeometry.getIndex());
 
     this.parameters = { pName, pZ, pY, pX, pLTX };
+    this.name = pName || 'G4Trap4';
   }
 
   static getEditorConfig() {
