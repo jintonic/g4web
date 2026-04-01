@@ -30,7 +30,6 @@ class G4TwistedTrd extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4TwistedTrd';
-    this.name = pName || 'G4TwistedTrd';
 
     const boxGeometry = new THREE.BoxGeometry(2, 2, 2, 5, 5, 5);
     const positions = boxGeometry.attributes.position.array.slice();
@@ -64,6 +63,7 @@ class G4TwistedTrd extends THREE.BufferGeometry {
     this.computeVertexNormals();
 
     this.parameters = { pName, pDx1, pDx2, pDy1, pDy2, pDz, pTwistedAngle };
+    this.name = pName || 'G4TwistedTrd';
   }
 
   static getEditorConfig() {
@@ -72,7 +72,7 @@ class G4TwistedTrd extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'TwistedTrd',
+          default: 'twistedTrd',
           geometryKey: 'pName',
         },
         pDx1: {

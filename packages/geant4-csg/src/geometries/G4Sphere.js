@@ -27,7 +27,6 @@ class G4Sphere extends THREE.BufferGeometry {
     if (pRmax <= pRmin) pRmax = pRmin + 0.01;
 
     this.type = 'G4Sphere';
-    this.name = pName || 'G4Sphere';
 
     const pSTheta_rad = (pSTheta * Math.PI) / 180;
     const pDTheta_rad = (pDTheta * Math.PI) / 180;
@@ -172,6 +171,7 @@ class G4Sphere extends THREE.BufferGeometry {
     };
 
     Object.assign(this, finalGeometry);
+    this.name = pName || 'G4Sphere';
   }
 
   static getEditorConfig() {
@@ -180,7 +180,7 @@ class G4Sphere extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Sphere',
+          default: 'sphere',
           geometryKey: 'pName',
         },
         pRmin: {

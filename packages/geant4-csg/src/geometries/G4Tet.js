@@ -25,7 +25,6 @@ class G4Tet extends THREE.BufferGeometry {
     super();
 
     this.type = 'G4Tet';
-    this.name = pName || 'G4Tet';
 
     const points = [
       new THREE.Vector3(...anchor),
@@ -54,6 +53,7 @@ class G4Tet extends THREE.BufferGeometry {
 
     Object.assign(this, finalGeometry);
     this.parameters = finalGeometry.parameters;
+    this.name = pName || 'G4Tet';
   }
 
   static getEditorConfig() {
@@ -62,7 +62,7 @@ class G4Tet extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Tet',
+          default: 'tet',
           geometryKey: 'pName',
         },
         anchor: {

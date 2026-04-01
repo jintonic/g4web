@@ -30,7 +30,6 @@ class G4Para extends THREE.BufferGeometry {
     if (pDz <= 0) pDz = 0.01;
 
     this.type = 'G4Para';
-    this.name = pName || 'G4Para';
 
     const alphaRad = (-pAlpha * Math.PI) / 180;
     const thetaRad = (-pTheta * Math.PI) / 180;
@@ -87,6 +86,7 @@ class G4Para extends THREE.BufferGeometry {
     this.computeVertexNormals();
     this.type = 'G4Para';
     this.parameters = { pName, pDx, pDy, pDz, pAlpha, pTheta, pPhi };
+    this.name = pName || 'G4Para';
   }
 
   static getEditorConfig() {
@@ -95,7 +95,7 @@ class G4Para extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Para',
+          default: 'para',
           geometryKey: 'pName',
         },
         pDx: {

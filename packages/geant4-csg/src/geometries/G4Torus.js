@@ -31,7 +31,6 @@ class G4Torus extends THREE.BufferGeometry {
     if (pDPhi <= 0) pDPhi = 1;
 
     this.type = 'G4Torus';
-    this.name = pName || 'G4Torus';
 
     const pSPhi_rad = (pSPhi * Math.PI) / 180;
     const pDPhi_rad = (pDPhi * Math.PI) / 180;
@@ -68,6 +67,7 @@ class G4Torus extends THREE.BufferGeometry {
     finalGeometry.parameters = { pName, pRmin, pRmax, pRtor, pSPhi, pDPhi };
 
     Object.assign(this, finalGeometry);
+    this.name = pName || 'G4Torus';
   }
 
   static getEditorConfig() {
@@ -76,7 +76,7 @@ class G4Torus extends THREE.BufferGeometry {
         pName: {
           type: 'string',
           label: 'Name',
-          default: 'Torus',
+          default: 'torus',
           geometryKey: 'pName',
         },
         pRmin: {
