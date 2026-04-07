@@ -320,7 +320,7 @@ export default defineConfig({
             )
             .replace(
               'https://github.com/mrdoob/three.js/wiki/Editor-Manual',
-              'https://github.com/jintonic/g4web#readme'
+              'https://github.com/jintonic/g4web/wiki'
             );
           return {
             code: cleanCode,
