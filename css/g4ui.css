@@ -1,25 +1,27 @@
 #toolbar {
   position: absolute;
-  top: 40px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  bottom: auto !important;
+  top: 40px;
+  left: 36%;
+  transform: translateX(-50%);
+  bottom: auto;
 
   height: 32px;
   display: flex;
   align-items: center;
   gap: 2px;
-  border-radius: 6px;
-  border: 3px solid #333 !important;
   z-index: 10;
+}
+
+#menubar {
+  z-index: 20;
 }
 
 #leftpanel {
   position: absolute;
   top: 36px;
   left: 0;
+  bottom: 0;
   width: 210px;
-  height: calc(100vh - 36px);
   overflow: auto;
   background: #eee;
   z-index: 0;
@@ -103,51 +105,122 @@
   color: #ccc;
 }
 
-#viewport {
-  left: 210px !important;
-}
-
-#script {
-  left: 210px !important;
-}
-
+#viewport,
+#script,
 #player {
-  left: 210px !important;
+  left: 210px;
+}
+
+:root {
+  --g4-export-overlay-bg: rgba(0, 0, 0, 0.45);
+  --g4-export-dialog-width: min(860px, 100%);
+  --g4-export-dialog-height: min(78vh, 760px);
+  --g4-export-dialog-max-height: 90vh;
+  --g4-export-dialog-bg: #fff;
+  --g4-export-dialog-color: #222;
+  --g4-export-dialog-border: #ccc;
+  --g4-export-header-bg: #f6f6f6;
+  --g4-export-header-border: #ddd;
+  --g4-export-close-color: #555;
+  --g4-export-tab-bg: #fafafa;
+  --g4-export-tab-color: #333;
+  --g4-export-tab-border: #bbb;
+  --g4-export-tab-active: #08f;
+  --g4-export-content-bg: #fcfcfc;
+  --g4-export-content-color: inherit;
+  --g4-export-content-border: #ccc;
 }
 
 @media all and (max-width: 600px) {
   #leftpanel {
-    display: none;
+    width: 100px;
+    height: auto;
+    bottom: 320px;
+    z-index: 1;
   }
 
-  #toolbar {
-    top: 40px !important;
+  .Panel-header {
+    padding: 8px 6px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
   }
 
-  #viewport {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+  .Category-widget {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 6px;
   }
 
-  #script {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+  .Category-item {
+    width: auto;
+    height: auto;
+    aspect-ratio: 1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
+  .Category-item div {
+    font-size: 10px;
+  }
+
+  #viewport,
+  #script,
   #player {
-    left: 0 !important;
-    top: 80px !important;
-    height: calc(100% - 436px) !important;
+    left: 100px;
+    bottom: 320px;
+    height: auto;
   }
 
   #sidebar {
-    top: calc(100% - 320px) !important;
+    z-index: 2;
+  }
+
+  .g4-export-preview {
+    padding: 0;
+  }
+
+  .g4-export-preview-dialog {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
   }
 }
 
+#leftpanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#leftpanel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#leftpanel::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#leftpanel::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 @media (prefers-color-scheme: dark) {
+  :root {
+    --g4-export-dialog-bg: #1a1a1a;
+    --g4-export-dialog-color: #ddd;
+    --g4-export-dialog-border: #333;
+    --g4-export-header-bg: #151515;
+    --g4-export-header-border: #2d2d2d;
+    --g4-export-close-color: #bbb;
+    --g4-export-tab-bg: #222;
+    --g4-export-tab-color: #bbb;
+    --g4-export-tab-border: #444;
+    --g4-export-content-bg: #111;
+    --g4-export-content-color: #d0d0d0;
+    --g4-export-content-border: #3a3a3a;
+  }
+
   #leftpanel {
     background-color: #111;
   }
@@ -181,8 +254,7 @@
   }
 
   .Category-item div {
-    background-color: transparent;
-    color: #fff;
+    color: #111;
   }
 
   .Category-item.no-image {
@@ -192,26 +264,7 @@
   .Category-item.no-image::before {
     color: #444;
   }
-}
 
-#leftpanel::-webkit-scrollbar {
-  width: 8px;
-}
-
-#leftpanel::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-#leftpanel::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-#leftpanel::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-@media (prefers-color-scheme: dark) {
   #leftpanel::-webkit-scrollbar-track {
     background: #0a0a0a;
   }
@@ -237,12 +290,110 @@
   font-size: 12px;
 }
 
-#g4MaterialPanel .G4MaterialSelect {
+#g4MaterialPanel .G4MaterialSelect,
+#g4MaterialPanel .G4MaterialDisplay {
   width: 150px;
   font-size: 12px;
 }
 
-#g4MaterialPanel .G4MaterialDisplay {
-  width: 150px;
-  font-size: 12px;
+.g4-export-preview.hidden {
+  display: none;
+}
+
+.g4-export-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--g4-export-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.g4-export-preview-dialog {
+  width: var(--g4-export-dialog-width);
+  height: var(--g4-export-dialog-height);
+  max-height: var(--g4-export-dialog-max-height);
+  background: var(--g4-export-dialog-bg);
+  color: var(--g4-export-dialog-color);
+  border-radius: 8px;
+  border: 1px solid var(--g4-export-dialog-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.g4-export-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--g4-export-header-border);
+  background: var(--g4-export-header-bg);
+}
+
+.g4-export-preview-close {
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--g4-export-close-color);
+}
+
+.g4-export-preview-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--g4-export-header-border);
+  background: var(--g4-export-header-bg);
+}
+
+.g4-export-preview-tabs button {
+  border: 1px solid var(--g4-export-tab-border);
+  background: var(--g4-export-tab-bg);
+  color: var(--g4-export-tab-color);
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.g4-export-preview-tabs button.active {
+  border-color: var(--g4-export-tab-active);
+  color: var(--g4-export-tab-active);
+}
+
+.g4-export-preview-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.g4-export-preview-pane {
+  display: none;
+}
+
+.g4-export-preview-pane.active {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.g4-export-preview-actions {
+  padding: 10px 12px 0;
+}
+
+.g4-export-preview-content {
+  margin: 8px 12px 12px;
+  padding: 10px;
+  border: 1px solid var(--g4-export-content-border);
+  border-radius: 4px;
+  background: var(--g4-export-content-bg);
+  color: var(--g4-export-content-color);
+  overflow: auto;
+  white-space: pre;
+  flex: 1;
+  min-height: 0;
 }

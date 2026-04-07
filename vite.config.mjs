@@ -139,10 +139,10 @@ export default defineConfig({
               option.setTextContent( 'TG' );
               option.onClick( async function () {
                 const { TGExporter } = await import( '/js/TGExporter.js' );
+                const { showTGExportPanel } = await import( '/js/TGExportPanel.js' );
                 const result = await TGExporter.exportTg( editor );
                 if ( result ) {
-                  const blob = new Blob( [ result ], { type: 'text/plain' } );
-                  editor.utils.save( blob, 'scene.tg' );
+                  showTGExportPanel( result, saveString );
                 }
               } );
               fileExportSubmenu.add( option );
