@@ -1,7 +1,5 @@
 const RUN_MAC_CONTENT = `# print macro commands on screen
 /control/verbose 1
-# uncomment the following line if you use https://github.com/jintonic/gears
-/geometry/source detector.tg
 
 # initialize geometry and physics
 /run/initialize
@@ -36,13 +34,13 @@ function createPanel(saveString) {
       <div class="g4-export-preview-body">
         <div class="g4-export-preview-pane active" data-pane="tg">
           <div class="g4-export-preview-actions">
-            <button type="button" class="Button" data-download="tg">Download scene.tg</button>
+            <button type="button" class="Button" data-download="tg">download detector.tg</button>
           </div>
           <pre class="g4-export-preview-content" data-content="tg"></pre>
         </div>
         <div class="g4-export-preview-pane" data-pane="mac">
           <div class="g4-export-preview-actions">
-            <button type="button" class="Button" data-download="mac">Download run.mac</button>
+            <button type="button" class="Button" data-download="mac">download run.mac</button>
           </div>
           <pre class="g4-export-preview-content" data-content="mac"></pre>
         </div>
@@ -83,7 +81,7 @@ function createPanel(saveString) {
 
   tgDownload.addEventListener('click', () => {
     const tgContentNode = overlay.querySelector('[data-content="tg"]');
-    saveString(tgContentNode.textContent || '', 'scene.tg');
+    saveString(tgContentNode.textContent || '', 'detector.tg');
   });
 
   macDownload.addEventListener('click', () => {
