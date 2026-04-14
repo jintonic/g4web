@@ -1,7 +1,5 @@
 const s=`# print macro commands on screen
 /control/verbose 1
-# uncomment the following line if you use https://github.com/jintonic/gears
-/geometry/source detector.tg
 
 # initialize geometry and physics
 /run/initialize
@@ -29,15 +27,15 @@ const s=`# print macro commands on screen
       <div class="g4-export-preview-body">
         <div class="g4-export-preview-pane active" data-pane="tg">
           <div class="g4-export-preview-actions">
-            <button type="button" class="Button" data-download="tg">Download scene.tg</button>
+            <button type="button" class="Button" data-download="tg">download detector.tg</button>
           </div>
           <pre class="g4-export-preview-content" data-content="tg"></pre>
         </div>
         <div class="g4-export-preview-pane" data-pane="mac">
           <div class="g4-export-preview-actions">
-            <button type="button" class="Button" data-download="mac">Download run.mac</button>
+            <button type="button" class="Button" data-download="mac">download run.mac</button>
           </div>
           <pre class="g4-export-preview-content" data-content="mac"></pre>
         </div>
       </div>
-    </div>`;const a=e.querySelector(".g4-export-preview-close"),r=e.querySelectorAll(".g4-export-preview-tabs button"),d=e.querySelectorAll(".g4-export-preview-pane"),l=e.querySelector('[data-download="tg"]'),p=e.querySelector('[data-download="mac"]'),c=()=>e.classList.add("hidden");return a.addEventListener("click",c),e.addEventListener("click",t=>{t.target===e&&c()}),r.forEach(t=>{t.addEventListener("click",()=>{const g=t.getAttribute("data-tab");r.forEach(o=>{const i=o===t;o.classList.toggle("active",i),o.setAttribute("aria-selected",String(i))}),d.forEach(o=>{o.classList.toggle("active",o.getAttribute("data-pane")===g)})})}),l.addEventListener("click",()=>{const t=e.querySelector('[data-content="tg"]');n(t.textContent||"","scene.tg")}),p.addEventListener("click",()=>{n(s,"run.mac")}),document.addEventListener("keydown",t=>{t.key==="Escape"&&!e.classList.contains("hidden")&&c()}),document.body.appendChild(e),e}function u(n,e){let a=document.getElementById("g4ExportPreview");a||(a=v(e)),a.querySelector('[data-content="tg"]').textContent=n,a.querySelector('[data-content="mac"]').textContent=s,a.querySelector('[data-tab="tg"]').click(),a.classList.remove("hidden")}export{u as showTGExportPanel};
+    </div>`;const a=e.querySelector(".g4-export-preview-close"),r=e.querySelectorAll(".g4-export-preview-tabs button"),d=e.querySelectorAll(".g4-export-preview-pane"),l=e.querySelector('[data-download="tg"]'),p=e.querySelector('[data-download="mac"]'),c=()=>e.classList.add("hidden");return a.addEventListener("click",c),e.addEventListener("click",t=>{t.target===e&&c()}),r.forEach(t=>{t.addEventListener("click",()=>{const g=t.getAttribute("data-tab");r.forEach(o=>{const i=o===t;o.classList.toggle("active",i),o.setAttribute("aria-selected",String(i))}),d.forEach(o=>{o.classList.toggle("active",o.getAttribute("data-pane")===g)})})}),l.addEventListener("click",()=>{const t=e.querySelector('[data-content="tg"]');n(t.textContent||"","detector.tg")}),p.addEventListener("click",()=>{n(s,"run.mac")}),document.addEventListener("keydown",t=>{t.key==="Escape"&&!e.classList.contains("hidden")&&c()}),document.body.appendChild(e),e}function u(n,e){let a=document.getElementById("g4ExportPreview");a||(a=v(e)),a.querySelector('[data-content="tg"]').textContent=n,a.querySelector('[data-content="mac"]').textContent=s,a.querySelector('[data-tab="tg"]').click(),a.classList.remove("hidden")}export{u as showTGExportPanel};
