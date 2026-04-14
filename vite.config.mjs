@@ -130,6 +130,50 @@ export default defineConfig({
               /newProjectSubmenu\.add\( new UIHorizontalRule\(\) \);/g,
               ''
             )
+            // Convert "New" submenu title into a direct-action click button
+            .replace(
+              `const newProjectSubmenuTitle = new UIRow().setTextContent( strings.getKey( 'menubar/file/new' ) ).addClass( 'option' ).addClass( 'submenu-title' );
+	newProjectSubmenuTitle.onMouseOver( function () {
+
+		const { top, right } = this.dom.getBoundingClientRect();
+		const { paddingTop } = getComputedStyle( this.dom );
+		newProjectSubmenu.setLeft( right + 'px' );
+		newProjectSubmenu.setTop( top - parseFloat( paddingTop ) + 'px' );
+		newProjectSubmenu.setDisplay( 'block' );
+
+	} );
+	newProjectSubmenuTitle.onMouseOut( function () {
+
+		newProjectSubmenu.setDisplay( 'none' );
+
+	} );`,
+              `const newProjectSubmenuTitle = new UIRow().setTextContent( strings.getKey( 'menubar/file/new' ) ).addClass( 'option' );
+	newProjectSubmenuTitle.onClick( function () {
+
+		if ( confirm( strings.getKey( 'prompt/file/open' ) ) ) {
+
+			editor.clear();
+
+		}
+
+	} );`
+            )
+            // Hide the Open option
+            .replace(
+              `option = new UIRow()
+		.addClass( 'option' )
+		.setTextContent( strings.getKey( 'menubar/file/open' ) )`,
+              `option = new UIRow()
+		.addClass( 'option' )
+		.setDisplay( 'none' )
+		.setTextContent( strings.getKey( 'menubar/file/open' ) )`
+            )
+            // Hide the Import option
+            .replace(
+              `option.setTextContent( strings.getKey( 'menubar/file/import' ) );`,
+              `option.setTextContent( strings.getKey( 'menubar/file/import' ) );
+	option.setDisplay( 'none' );`
+            )
             .replace(
               `// Export DRC`,
               `// Export TG
@@ -258,6 +302,15 @@ export default defineConfig({
             .replace(
               'container.add( objectUUIDRow );',
               '// container.add( objectUUIDRow );'
+            )
+            .replace(
+              'container.add( objectScaleRow );',
+              "objectScaleRow.setDisplay( 'none' ); container.add( objectScaleRow );"
+            )
+            .replace(
+              `objectRotationRow.setDisplay( '' );
+			objectScaleRow.setDisplay( '' );`,
+              `objectRotationRow.setDisplay( '' );`
             );
           return {
             code: cleanCode,
@@ -291,6 +344,28 @@ export default defineConfig({
               "environmentRow.setDisplay( 'none' ); container.add( environmentRow );"
             );
           return { code: cleanCode, map: null };
+        }
+
+        // hide camera select dropdown in viewport controls
+        if (id.includes('Viewport.Controls.js')) {
+          return {
+            code: code.replace(
+              'container.add( cameraSelect );',
+              "cameraSelect.setDisplay( 'none' ); container.add( cameraSelect );"
+            ),
+            map: null,
+          };
+        }
+
+        // hide scale button in toolbar
+        if (id.includes('Toolbar.js')) {
+          return {
+            code: code.replace(
+              'container.add( scale );',
+              "scale.setDisplay( 'none' ); container.add( scale );"
+            ),
+            map: null,
+          };
         }
 
         if (id.includes('Viewport.js')) {

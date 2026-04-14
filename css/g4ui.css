@@ -1,7 +1,7 @@
 #toolbar {
   position: absolute;
   top: 40px;
-  left: 36%;
+  left: 260px;
   transform: translateX(-50%);
   bottom: auto;
 
@@ -294,6 +294,7 @@
 #g4MaterialPanel .G4MaterialDisplay {
   width: 150px;
   font-size: 12px;
+  text-transform: none;
 }
 
 .g4-export-preview.hidden {
@@ -383,6 +384,10 @@
 
 .g4-export-preview-actions {
   padding: 10px 12px 0;
+}
+
+.g4-export-preview-actions .Button {
+  text-transform: none;
 }
 
 .g4-export-preview-content {
