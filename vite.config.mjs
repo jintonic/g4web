@@ -396,6 +396,10 @@ export default defineConfig({
             .replace(
               'https://github.com/mrdoob/three.js/wiki/Editor-Manual',
               'https://github.com/jintonic/g4web/wiki'
+            )
+            .replace(
+              `options.add( option );\n\n\treturn container;`,
+              `options.add( option );\n\n\t// Feedback\n\n\toption = new UIRow();\n\toption.setClass( 'option' );\n\toption.setTextContent( 'Feedback' );\n\toption.onClick( function () {\n\n\t\twindow.open( 'https://forms.gle/pwYVLn2u3VWUJJ6q8', '_blank' );\n\n\t} );\n\toptions.add( option );\n\n\treturn container;`
             );
           return {
             code: cleanCode,
