@@ -186,7 +186,7 @@ function SidebarGeometry(editor) {
         });
       }
 
-      currentValues.pName = geometry.parameters.pName || geometry.name;
+      currentValues.pName = geometry.name || geometry.name;
       editor.execute(
         new config.SetGeometryCommand(
           editor,

@@ -98,7 +98,10 @@ function LeftPanelSolids(editor) {
 
     item.onClick(function () {
       const geometry = config.createGeometry();
-      const mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial());
+      const mesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshLambertMaterial({ name: 'G4_Galactic' })
+      );
       mesh.name = `${config.displayName}_${mesh.uuid.substring(0, 6)}`;
       geometry.name = `${geometry.name}_${mesh.uuid.substring(0, 6)}`;
       geometry.type = config.type;
@@ -108,7 +111,10 @@ function LeftPanelSolids(editor) {
     item.dom.addEventListener('dragend', function (event) {
       const position = getPositionFromMouse(event);
       const geometry = config.createGeometry();
-      const mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial());
+      const mesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshLambertMaterial({ name: 'G4_Galactic' })
+      );
       mesh.name = `${config.displayName}_${mesh.uuid.substring(0, 6)}`;
       geometry.name = `${geometry.name}_${mesh.uuid.substring(0, 6)}`;
       geometry.type = config.type;
@@ -129,7 +135,9 @@ function LeftPanelSolids(editor) {
       widget.add(shapeItem);
     });
 
-    return widget;
+    section.add(widget);
+
+    return section;
   }
 
   function createDefaultGeometry(GeometryClass) {

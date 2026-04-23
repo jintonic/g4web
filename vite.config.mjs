@@ -219,12 +219,12 @@ export default defineConfig({
             code: code
               .replace(
                 `const color = new UIColor().onInput( onChange );`,
-                `const color = new UIColor().setHexValue( 'ff5c5c' ).onInput( onChange );`
+                `const color = new UIColor().setHexValue( '31ae0f' ).onInput( onChange );`
               )
               .replace(
                 `color.setHexValue( material[ property ].getHexString() );`,
                 `if ( !material[ property ] || material[ property ].getHexString() === 'ffffff' ) {
-                    material[ property ] = new THREE.Color( 0xff5c5c );
+                    material[ property ] = new THREE.Color( 0x31ae0f );
                   }
                   color.setHexValue( material[ property ].getHexString() );`
               )
@@ -235,8 +235,8 @@ export default defineConfig({
                   materialSlot = 0;
                   if ( object && object.material && property in object.material ) {
                     if ( !object.material[ property ] || object.material[ property ].getHexString() === 'ffffff' ) {
-                      object.material[ property ] = new THREE.Color( 0xff5c5c );
-                      editor.execute( new SetMaterialColorCommand( editor, object, property, 0xff5c5c, 0 ) );
+                      object.material[ property ] = new THREE.Color( 0x31ae0f );
+                      editor.execute( new SetMaterialColorCommand( editor, object, property, 0x31ae0f, 0 ) );
                     }
                   }
                   update( selected );
