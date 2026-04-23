@@ -325,12 +325,17 @@ export default defineConfig({
               `import { UIPanel, UIBreak, UIRow, UIColor, UISelect, UIText, UINumber, UIButton } from './libs/ui.js';`
             )
             .replace(
+              'escapeHTML( object.name )',
+              "escapeHTML( object.isScene ? 'world' : object.name )"
+            )
+            .replace(
               `container.setPaddingTop( '20px' );`,
               `container.setPaddingTop( '20px' );
                 const gridInfoBanner = document.createElement('div');
                 gridInfoBanner.textContent = 'The grid is 60×60 cm, each square = 1 cm.';
                 container.dom.appendChild(gridInfoBanner);`
             )
+            .replace(`options.push( buildOption( camera, false ) );`, '')
             .replace(
               'container.add( fogTypeRow );',
               "fogTypeRow.setDisplay( 'none' ); container.add( fogTypeRow );"
@@ -396,6 +401,10 @@ export default defineConfig({
             .replace(
               'https://github.com/mrdoob/three.js/wiki/Editor-Manual',
               'https://github.com/jintonic/g4web/wiki'
+            )
+            .replace(
+              `options.add( option );\n\n\treturn container;`,
+              `options.add( option );\n\n\t// Feedback\n\n\toption = new UIRow();\n\toption.setClass( 'option' );\n\toption.setTextContent( 'Feedback' );\n\toption.onClick( function () {\n\n\t\twindow.open( 'https://forms.gle/pwYVLn2u3VWUJJ6q8', '_blank' );\n\n\t} );\n\toptions.add( option );\n\n\treturn container;`
             );
           return {
             code: cleanCode,
