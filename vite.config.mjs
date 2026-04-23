@@ -325,12 +325,17 @@ export default defineConfig({
               `import { UIPanel, UIBreak, UIRow, UIColor, UISelect, UIText, UINumber, UIButton } from './libs/ui.js';`
             )
             .replace(
+              'escapeHTML( object.name )',
+              "escapeHTML( object.isScene ? 'world' : object.name )"
+            )
+            .replace(
               `container.setPaddingTop( '20px' );`,
               `container.setPaddingTop( '20px' );
                 const gridInfoBanner = document.createElement('div');
                 gridInfoBanner.textContent = 'The grid is 60×60 cm, each square = 1 cm.';
                 container.dom.appendChild(gridInfoBanner);`
             )
+            .replace(`options.push( buildOption( camera, false ) );`, '')
             .replace(
               'container.add( fogTypeRow );',
               "fogTypeRow.setDisplay( 'none' ); container.add( fogTypeRow );"
