@@ -120,15 +120,7 @@ function LeftPanelSolids(editor) {
     return item;
   }
 
-  function createItem(title, shapes) {
-    const section = new UIPanel();
-    section.setClass('Panel-section');
-
-    const header = new UIDiv();
-    header.setClass('Panel-header');
-    header.setTextContent(title);
-    section.add(header);
-
+  function createShapesGrid(shapes) {
     const widget = new UIPanel();
     widget.setClass('Category-widget');
 
@@ -137,15 +129,7 @@ function LeftPanelSolids(editor) {
       widget.add(shapeItem);
     });
 
-    section.add(widget);
-
-    let isCollapsed = false;
-    header.onClick(function () {
-      isCollapsed = !isCollapsed;
-      widget.dom.style.display = isCollapsed ? 'none' : 'block';
-    });
-
-    return section;
+    return widget;
   }
 
   function createDefaultGeometry(GeometryClass) {
@@ -300,8 +284,53 @@ function LeftPanelSolids(editor) {
     },
   ];
 
-  const solidsSection = createItem('SOLIDS', solidsShapes);
-  container.add(solidsSection);
+  const tabs = new UIDiv();
+  tabs.setClass('LeftTabs');
+
+  const solidsTab = new UIDiv();
+  solidsTab.setClass('LeftTabButton active');
+  solidsTab.setTextContent('SOLIDS');
+  tabs.add(solidsTab);
+
+  const examplesTab = new UIDiv();
+  examplesTab.setClass('LeftTabButton');
+  examplesTab.setTextContent('EXAMPLES');
+  tabs.add(examplesTab);
+
+  container.add(tabs);
+
+  const solidsPane = new UIPanel();
+  solidsPane.setClass('LeftTabPane');
+  solidsPane.add(createShapesGrid(solidsShapes));
+  container.add(solidsPane);
+
+  const examplesPane = new UIPanel();
+  examplesPane.setClass('LeftTabPane');
+  examplesPane.setDisplay('none');
+
+  const examplesPlaceholder = new UIDiv();
+  examplesPlaceholder.setClass('LeftTabPlaceholder');
+  examplesPlaceholder.setTextContent('Examples coming soon');
+  examplesPane.add(examplesPlaceholder);
+  container.add(examplesPane);
+
+  function setActiveTab(tab) {
+    const isSolids = tab === 'solids';
+
+    solidsTab.toggleClass('active', isSolids);
+    examplesTab.toggleClass('active', !isSolids);
+
+    solidsPane.setDisplay(isSolids ? 'block' : 'none');
+    examplesPane.setDisplay(isSolids ? 'none' : 'block');
+  }
+
+  solidsTab.onClick(function () {
+    setActiveTab('solids');
+  });
+
+  examplesTab.onClick(function () {
+    setActiveTab('examples');
+  });
 
   return container;
 }

@@ -50,6 +50,48 @@
   background: #d5d5d5;
 }
 
+.LeftTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid #ccc;
+}
+
+.LeftTabButton {
+  padding: 9px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #666;
+  background: #ddd;
+  cursor: pointer;
+  user-select: none;
+}
+
+.LeftTabButton + .LeftTabButton {
+  border-left: 1px solid #ccc;
+}
+
+.LeftTabButton:hover {
+  background: #d5d5d5;
+}
+
+.LeftTabButton.active {
+  color: #1f1f1f;
+  background: #eee;
+}
+
+.LeftTabPane {
+  min-height: 0;
+}
+
+.LeftTabPlaceholder {
+  padding: 12px;
+  color: #777;
+  font-size: 12px;
+}
+
 .Category-widget {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -141,6 +183,12 @@
 
   .Panel-header {
     padding: 8px 6px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .LeftTabButton {
+    padding: 8px 4px;
     font-size: 10px;
     letter-spacing: 0.5px;
   }
@@ -237,6 +285,32 @@
 
   .Panel-header:hover {
     background: #222;
+  }
+
+  .LeftTabs {
+    border-bottom-color: #222;
+  }
+
+  .LeftTabButton {
+    color: #888;
+    background: #1a1a1a;
+  }
+
+  .LeftTabButton + .LeftTabButton {
+    border-left-color: #222;
+  }
+
+  .LeftTabButton:hover {
+    background: #222;
+  }
+
+  .LeftTabButton.active {
+    color: #ddd;
+    background: #111;
+  }
+
+  .LeftTabPlaceholder {
+    color: #aaa;
   }
 
   .Category-widget {
