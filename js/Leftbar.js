@@ -318,7 +318,7 @@ function LeftPanelSolids(editor) {
 
   const examplesPlaceholder = new UIDiv();
   examplesPlaceholder.setClass('LeftTabPlaceholder');
-  examplesPlaceholder.setTextContent('Examples coming soon');
+  examplesPlaceholder.setTextContent('Examples coming soon.');
   examplesPane.add(examplesPlaceholder);
   container.add(examplesPane);
 
