@@ -30,7 +30,7 @@ import * as THREE from 'three';
 window.THREE = THREE;
 // create a renderer to render the scene
 editor.signals.rendererCreated.dispatch(
-  new THREE.WebGLRenderer({ antialias: true })
+  new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
 );
 // trigger re-rendering upon window resize
 window.addEventListener('resize', () => editor.signals.windowResize.dispatch());
