@@ -254,8 +254,16 @@ export default defineConfig({
               ''
             )
             .replace(
+              "import { MenubarHelp } from './Menubar.Help.js';",
+              "import { MenubarHelp } from './Menubar.Help.js';\nimport { MenubarShare } from '/js/Menubar.Share.js';"
+            )
+            .replace(
               /\tcontainer\.add\( new MenubarRender\( editor \) \);\n/,
               ''
+            )
+            .replace(
+              /	container\.add\( new MenubarHelp\( editor \) \);\n/,
+              '\tcontainer.add( new MenubarShare( editor ) );\n\tcontainer.add( new MenubarHelp( editor ) );\n'
             );
           return {
             code: cleanCode,

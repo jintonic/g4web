@@ -476,3 +476,133 @@
   flex: 1;
   min-height: 0;
 }
+
+.g4-share-overlay.hidden {
+  display: none;
+}
+
+.g4-share-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3100;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.g4-share-dialog {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  background: var(--g4-export-dialog-bg);
+  color: var(--g4-export-dialog-color);
+  border: 1px solid var(--g4-export-dialog-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.g4-share-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--g4-export-header-border);
+  background: var(--g4-export-header-bg);
+}
+
+.g4-share-close {
+  border: 0;
+  background: transparent;
+  color: var(--g4-export-close-color);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.g4-share-body {
+  padding: 12px;
+  overflow: auto;
+}
+
+.g4-share-step {
+  display: none;
+}
+
+.g4-share-step.active {
+  display: block;
+}
+
+.g4-share-copy,
+.g4-share-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+}
+
+.g4-share-preview-wrap {
+  border: 1px solid var(--g4-export-content-border);
+  border-radius: 4px;
+  background: var(--g4-export-content-bg);
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.g4-share-preview {
+  max-width: 100%;
+  max-height: min(48vh, 380px);
+  display: block;
+}
+
+.g4-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.g4-share-actions .Button,
+.g4-share-social-grid .Button {
+  text-transform: none;
+}
+
+.g4-share-actions-primary {
+  margin-bottom: 8px;
+}
+
+.g4-share-social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.g4-share-feedback {
+  min-height: 32px;
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--g4-export-header-border);
+  color: var(--g4-export-tab-active);
+  font-size: 12px;
+}
+
+.g4-share-feedback.error {
+  color: #d43f3f;
+}
+
+@media all and (max-width: 600px) {
+  .g4-share-overlay {
+    padding: 0;
+  }
+
+  .g4-share-dialog {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .g4-share-social-grid {
+    grid-template-columns: 1fr;
+  }
+}
