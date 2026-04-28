@@ -135,9 +135,7 @@ function LeftPanelSolids(editor) {
       widget.add(shapeItem);
     });
 
-    section.add(widget);
-
-    return section;
+    return widget;
   }
 
   function createDefaultGeometry(GeometryClass) {
