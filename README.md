@@ -1,4 +1,4 @@
-A web-based userinterface for Geant4 detector definition built on the official Three.js Editor.
+A web-based user interface for Geant4 detector definition built on the official Three.js Editor.
 
 ## Getting Started
 
