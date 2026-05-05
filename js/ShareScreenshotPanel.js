@@ -99,11 +99,6 @@ function setFeedback(state, message, isError = false) {
   state.feedback.classList.toggle('error', isError);
 }
 
-function setStep(state, step) {
-  state.captureStep.classList.toggle('active', step === 'capture');
-  state.resultStep.classList.toggle('active', step === 'result');
-}
-
 function resetPreview(state) {
   if (state.previewUrl) {
     URL.revokeObjectURL(state.previewUrl);
@@ -112,7 +107,6 @@ function resetPreview(state) {
 
   state.previewImage.removeAttribute('src');
   state.blob = null;
-  state.file = null;
   state.fileName = '';
 }
 
@@ -154,15 +148,9 @@ async function captureViewport(state) {
 
   const filename = getTimestampedName();
 
-  let file = null;
-  if (typeof File !== 'undefined') {
-    file = new File([blob], filename, { type: 'image/png' });
-  }
-
   resetPreview(state);
 
   state.blob = blob;
-  state.file = file;
   state.fileName = filename;
   state.previewUrl = URL.createObjectURL(blob);
   state.previewImage.src = state.previewUrl;
@@ -181,17 +169,10 @@ function createPanel() {
       </div>
 
       <div class="g4-share-body">
-        <div class="g4-share-step g4-share-capture-step active" data-step="capture">
+        <div class="g4-share-result-step">
           <p class="g4-share-copy">
-            Capture the current viewport, then share it on social media.
+            Screenshot captured from the current viewport.
           </p>
-          <div class="g4-share-actions">
-            <button type="button" class="Button" data-action="capture">Capture Screenshot</button>
-            <button type="button" class="Button" data-action="cancel">Cancel</button>
-          </div>
-        </div>
-
-        <div class="g4-share-step g4-share-result-step" data-step="result">
           <div class="g4-share-preview-wrap">
             <img class="g4-share-preview" alt="Screenshot preview" />
           </div>
@@ -203,7 +184,6 @@ function createPanel() {
           <div class="g4-share-actions g4-share-actions-primary">
             <button type="button" class="Button" data-action="copy">Copy Image</button>
             <button type="button" class="Button" data-action="download">Download PNG</button>
-            <button type="button" class="Button" data-action="retake">Retake</button>
           </div>
 
           <div class="g4-share-social-grid">
@@ -222,19 +202,14 @@ function createPanel() {
   `;
 
   const closeButton = overlay.querySelector('.g4-share-close');
-  const captureStep = overlay.querySelector('.g4-share-capture-step');
-  const resultStep = overlay.querySelector('.g4-share-result-step');
   const previewImage = overlay.querySelector('.g4-share-preview');
   const feedback = overlay.querySelector('.g4-share-feedback');
 
   const state = {
     overlay,
-    captureStep,
-    resultStep,
     previewImage,
     feedback,
     blob: null,
-    file: null,
     fileName: '',
     previewUrl: null,
   };
@@ -244,10 +219,22 @@ function createPanel() {
     setFeedback(state, '');
   };
 
-  const open = () => {
-    setStep(state, 'capture');
-    setFeedback(state, '');
+  const open = async () => {
     overlay.classList.remove('hidden');
+    resetPreview(state);
+
+    setFeedback(state, 'Capturing screenshot...');
+
+    try {
+      await captureViewport(state);
+      setFeedback(state, 'Screenshot captured. Choose how to share it.');
+    } catch (error) {
+      setFeedback(
+        state,
+        error.message || 'Failed to capture screenshot.',
+        true
+      );
+    }
   };
 
   closeButton.addEventListener('click', close);
@@ -263,24 +250,6 @@ function createPanel() {
       const action = button.getAttribute('data-action');
 
       try {
-        if (action === 'cancel') {
-          close();
-          return;
-        }
-
-        if (action === 'capture') {
-          await captureViewport(state);
-          setStep(state, 'result');
-          setFeedback(state, 'Screenshot captured. Choose how to share it.');
-          return;
-        }
-
-        if (action === 'retake') {
-          setStep(state, 'capture');
-          setFeedback(state, 'Take another screenshot.');
-          return;
-        }
-
         if (action === 'copy') {
           await copyImageToClipboard(state);
           setFeedback(state, 'Image copied to clipboard.');
