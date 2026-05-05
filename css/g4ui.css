@@ -53,6 +53,7 @@
 .LeftTabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 
@@ -80,6 +81,10 @@
 .LeftTabButton.active {
   color: #1f1f1f;
   background: #eee;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
+  border-bottom: 1px solid #eee;
 }
 
 .LeftTabPane {
@@ -292,6 +297,7 @@
   }
 
   .LeftTabs {
+    border-top-color: #222;
     border-bottom-color: #222;
   }
 
@@ -311,6 +317,7 @@
   .LeftTabButton.active {
     color: #ddd;
     background: #111;
+    border-bottom: 1px solid #111;
   }
 
   .LeftTabPlaceholder {
