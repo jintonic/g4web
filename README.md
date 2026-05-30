@@ -15,8 +15,20 @@ A live demo is available at **https://jintonic.github.io/g4web/**.
 - [Who is it for?](#who-is-it-for)
 - [Features](#features)
 - [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
+  - [Troubleshooting](#troubleshooting)
 - [Development Setup](#development-setup)
-- [Basic Usage](#basic-usage)
+- [Usage](#usage)
+  - [Adding a Solid](#adding-a-solid)
+  - [Selecting and Moving Objects](#selecting-and-moving-objects)
+  - [Editing Geometry Parameters](#editing-geometry-parameters)
+  - [Assigning a Geant4 Material](#assigning-a-geant4-material)
+  - [Inspecting the Geometry](#inspecting-the-geometry)
+  - [Saving the Scene](#saving-the-scene)
+  - [Exporting for Geant4](#exporting-for-geant4)
+  - [Importing Geometry](#importing-geometry)
+  - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Verification](#verification)
 - [Screenshots](#screenshots)
 - [Citation](#citation)
@@ -63,8 +75,11 @@ g4web is designed for:
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or later and npm (bundled with Node.js).
-- [Git](https://git-scm.com/) with submodule support.
+| Requirement | Minimum version | Notes                             |
+| ----------- | --------------- | --------------------------------- |
+| Node.js     | 18.x            | [nodejs.org](https://nodejs.org/) |
+| npm         | 9.x             | Bundled with Node.js              |
+| Git         | 2.x             | Must support `git submodule`      |
 
 ### Steps
 
@@ -81,7 +96,11 @@ npm install
 > Git submodule under `vendor/threejs/`. If you already cloned without it, run:
 > `git submodule update --init --recursive`
 
-For more detail, see [docs/installation.md](docs/installation.md).
+### Troubleshooting
+
+- **`git submodule` errors after cloning** — run `git submodule update --init --recursive` to populate `vendor/threejs/`.
+- **Port already in use** — Vite will pick the next available port; check the terminal output for the actual URL.
+- **`npm install` fails on Node.js < 18** — upgrade Node.js. Using [nvm](https://github.com/nvm-sh/nvm) is recommended (`nvm install 20 && nvm use 20`).
 
 ---
 
@@ -102,19 +121,97 @@ npm run build
 npm run preview
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/developer-guide.md](docs/developer-guide.md) for the project's non-destructive customization approach before making UI changes.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's non-destructive customization approach before making UI changes.
 
 ---
 
-## Basic Usage
+## Usage
 
-1. **Add a solid** — Click a shape icon in the left panel (e.g., Box) to place it in the scene.
-2. **Configure geometry** — Select the object and edit its dimensions in the right sidebar under the _Geometry_ tab.
-3. **Assign a material** — Under the _Material_ tab, choose a category and select a Geant4 NIST material.
-4. **Inspect in 3D** — Orbit, zoom, and pan in the viewport to verify the geometry.
-5. **Export** — Use the export menu to download `detector.tg` and `run.mac` files for use with GEARS or other Geant4 tools.
+g4web presents a 3D viewport in the centre of the screen, a **left panel** of Geant4 solid shapes, and a **right sidebar** with _Object_, _Geometry_, and _Material_ tabs for configuration.
 
-For a step-by-step walkthrough, see [docs/user-guide.md](docs/user-guide.md) and [examples/README.md](examples/README.md).
+### Adding a Solid
+
+Click any shape icon in the **left panel** to place it in the 3D scene. Available shapes include:
+
+| Icon group  | Geant4 solid types                                       |
+| ----------- | -------------------------------------------------------- |
+| Primitives  | G4Box, G4Tubs, G4Cons, G4Sphere, G4Torus                 |
+| Polyhedral  | G4Para, G4Trd, G4Trap, G4Trap4                           |
+| Curvilinear | G4Ellipsoid, G4EllipticalTube, G4EllipticalCone, G4Hype  |
+| Polysurface | G4Polycone, G4Polyhedra, G4Tet                           |
+| Twisted     | G4TwistedBox, G4TwistedTrd, G4TwistedTrap, G4TwistedTubs |
+
+You can also drag a shape icon into the viewport to place the solid at the cursor position.
+
+### Selecting and Moving Objects
+
+- **Left-click** an object in the viewport to select it.
+- Use the **transform gizmo** (top-left toolbar) to translate or rotate.
+- Numeric values can also be edited directly in the _Object_ tab of the sidebar.
+
+### Editing Geometry Parameters
+
+1. Select an object in the viewport.
+2. Open the **Geometry** tab in the right sidebar.
+3. Adjust the dimension parameters (e.g., half-lengths, radii, angles).
+
+Parameters correspond 1-to-1 to Geant4 constructor arguments. Units are in **centimetres** for lengths and **degrees** for angles.
+
+### Assigning a Geant4 Material
+
+1. Select an object in the viewport.
+2. Open the **Material** tab in the right sidebar.
+3. Choose a **Category**:
+   - _Elements (Periodic Table)_ — pure elements, e.g. `G4_H`, `G4_Fe`
+   - _NIST Compounds_ — pre-defined NIST materials, e.g. `G4_WATER`, `G4_AIR`
+   - _HEP & Nuclear_ — detector-specific materials, e.g. `G4_lH2`, `G4_lN2`
+   - _Space Materials_ — e.g. `G4_KEVLAR`
+   - _Bio-Chemical_ — e.g. `G4_CYTOSINE`
+4. Select the desired **material** from the drop-down list.
+
+The selected material is stored in `object.userData.g4Material` and serialised with the scene.
+
+### Inspecting the Geometry
+
+- **Orbit**: left-click and drag.
+- **Zoom**: scroll wheel.
+- **Pan**: right-click and drag (or middle-click and drag).
+- Use the **View** menu to toggle helpers (grid, axes, etc.).
+
+### Saving the Scene
+
+The scene is **auto-saved** to browser local storage as you work. To save it as a JSON file for backup or sharing, use **File → Export → Scene (JSON)** from the menubar.
+
+### Exporting for Geant4
+
+g4web can export the scene to two files:
+
+- **`detector.tg`** — A human-readable Text-based Geometry description accepted by [GEARS](https://github.com/jintonic/gears) and other tools that support the Geant4 text geometry reader.
+- **`run.mac`** — A starter Geant4 macro that initialises the geometry, configures a 2.6 MeV isotropic gamma-ray source, and runs 100 events.
+
+To export:
+
+1. Click **File → Export → TG** in the menubar.
+2. A preview panel shows both the `.tg` and `.mac` content.
+3. Use the **download** buttons to save the files to your computer.
+
+For details on the `.tg` format, supported solids, units convention, and current limitations (e.g. CSG boolean operations are not yet exported), see [docs/geometry-export.md](docs/geometry-export.md).
+
+### Importing Geometry
+
+Drag and drop a previously exported `.json` scene file, or a supported 3D file (OBJ, STL, GLTF), onto the viewport to import it.
+
+### Keyboard Shortcuts
+
+| Key            | Action                 |
+| -------------- | ---------------------- |
+| `W`            | Move (translate) mode  |
+| `E`            | Rotate mode            |
+| `R`            | Scale mode             |
+| `Del`          | Delete selected object |
+| `Ctrl+Z`       | Undo                   |
+| `Ctrl+Shift+Z` | Redo                   |
+| `Ctrl+S`       | Save to local storage  |
 
 ---
 

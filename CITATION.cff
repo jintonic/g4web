@@ -23,6 +23,12 @@ authors:
   - family-names: Liu
     given-names: Jing
     orcid: 'https://orcid.org/0000-0003-1869-2407'
+  - family-names: Islam
+    given-names: Md Aftabul
+    orcid: 'https://orcid.org/0009-0007-4094-9287'
+  - family-names: Sah
+    given-names: Chitrashen
+    orcid: 'https://orcid.org/0000-0000-0000-0000'
 references:
   - type: software
     title: 'Three.js'
