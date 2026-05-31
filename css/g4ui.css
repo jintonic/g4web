@@ -617,3 +617,78 @@
     grid-template-columns: 1fr;
   }
 }
+
+.g4-survey-overlay.hidden {
+  display: none;
+}
+
+.g4-survey-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3200;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.g4-survey-dialog {
+  width: min(380px, 100%);
+  background: var(--g4-export-dialog-bg);
+  color: var(--g4-export-dialog-color);
+  border: 1px solid var(--g4-export-dialog-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.g4-survey-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--g4-export-header-border);
+  background: var(--g4-export-header-bg);
+}
+
+.g4-survey-close {
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--g4-export-close-color);
+}
+
+.g4-survey-body {
+  padding: 14px 12px;
+}
+
+.g4-survey-copy {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.g4-survey-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.g4-survey-actions .Button {
+  text-transform: none;
+}
+
+@media all and (max-width: 600px) {
+  .g4-survey-actions {
+    justify-content: stretch;
+  }
+
+  .g4-survey-actions .Button {
+    flex: 1 1 auto;
+  }
+}

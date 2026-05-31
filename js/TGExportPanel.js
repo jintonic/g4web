@@ -1,3 +1,107 @@
+const SURVEY_URL = 'https://forms.gle/jN8vKdzNbjkxSRde7';
+const SURVEY_STORAGE_KEY = 'g4web.survey.dismissed';
+
+function isSurveyDismissed() {
+  try {
+    return window.localStorage.getItem(SURVEY_STORAGE_KEY) === '1';
+  } catch (_) {
+    return false;
+  }
+}
+
+function dismissSurvey() {
+  try {
+    window.localStorage.setItem(SURVEY_STORAGE_KEY, '1');
+  } catch (_) {
+    /* ignore storage errors (private mode, etc.) */
+  }
+}
+
+function createSurveyPrompt() {
+  const overlay = document.createElement('div');
+  overlay.id = 'g4SurveyPrompt';
+  overlay.className = 'g4-survey-overlay hidden';
+
+  overlay.innerHTML = `
+    <div class="g4-survey-dialog" role="dialog" aria-modal="true" aria-labelledby="g4SurveyTitle">
+      <div class="g4-survey-header">
+        <strong id="g4SurveyTitle">Quick survey</strong>
+        <button type="button" class="g4-survey-close" aria-label="Close">×</button>
+      </div>
+      <div class="g4-survey-body">
+        <p class="g4-survey-copy">
+          Help us improve g4web — do you want to take a short survey?
+        </p>
+        <div class="g4-survey-actions">
+          <button type="button" class="Button" data-survey="yes">Yes</button>
+          <button type="button" class="Button" data-survey="no">No</button>
+          <button type="button" class="Button" data-survey="never">Don't show again</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function showSurveyPrompt() {
+  return new Promise((resolve) => {
+    let overlay = document.getElementById('g4SurveyPrompt');
+    if (!overlay) overlay = createSurveyPrompt();
+
+    const close = (choice) => {
+      overlay.classList.add('hidden');
+      cleanup();
+      resolve(choice);
+    };
+
+    const onOverlayClick = (event) => {
+      if (event.target === overlay) close('dismiss');
+    };
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.stopImmediatePropagation();
+        close('dismiss');
+      }
+    };
+    const onButtonClick = (event) => {
+      const choice = event.currentTarget.getAttribute('data-survey');
+      close(choice);
+    };
+    const onCloseClick = () => close('dismiss');
+
+    const closeButton = overlay.querySelector('.g4-survey-close');
+    const buttons = overlay.querySelectorAll('[data-survey]');
+
+    function cleanup() {
+      overlay.removeEventListener('click', onOverlayClick);
+      document.removeEventListener('keydown', onKeyDown, true);
+      closeButton.removeEventListener('click', onCloseClick);
+      buttons.forEach((btn) => btn.removeEventListener('click', onButtonClick));
+    }
+
+    overlay.addEventListener('click', onOverlayClick);
+    document.addEventListener('keydown', onKeyDown, true);
+    closeButton.addEventListener('click', onCloseClick);
+    buttons.forEach((btn) => btn.addEventListener('click', onButtonClick));
+
+    overlay.classList.remove('hidden');
+  });
+}
+
+async function requestSurveyBeforeDownload() {
+  if (isSurveyDismissed()) return;
+
+  const choice = await showSurveyPrompt();
+
+  if (choice === 'yes') {
+    window.open(SURVEY_URL, '_blank', 'noopener,noreferrer');
+    dismissSurvey();
+  } else if (choice === 'never') {
+    dismissSurvey();
+  }
+}
+
 const RUN_MAC_CONTENT = `# print macro commands on screen
 /control/verbose 1
 
@@ -79,12 +183,14 @@ function createPanel(saveString) {
     });
   });
 
-  tgDownload.addEventListener('click', () => {
+  tgDownload.addEventListener('click', async () => {
     const tgContentNode = overlay.querySelector('[data-content="tg"]');
+    await requestSurveyBeforeDownload();
     saveString(tgContentNode.textContent || '', 'detector.tg');
   });
 
-  macDownload.addEventListener('click', () => {
+  macDownload.addEventListener('click', async () => {
+    await requestSurveyBeforeDownload();
     saveString(RUN_MAC_CONTENT, 'run.mac');
   });
 
