@@ -2,11 +2,66 @@
 
 Thank you for your interest in contributing! Please read the [Design Philosophy](#design-philosophy) section below to understand the recommended way to modify the code, and then follow the [Development Workflow](#development-workflow) section to make changes.
 
+## Architecture Overview
+
+g4web is a single-page application built on the official [Three.js Editor][editor]. The editor provides the 3D viewport, undo/redo command stack, signal bus, and UI widget library. g4web layers Geant4-specific functionality on top **without modifying any vendor files**.
+
+```
+g4web/
+├── index.html              # Application entry point
+├── js/                     # g4web-specific source code
+│   ├── main.js             # Bootstraps the editor and g4web modules
+│   ├── Leftbar.js          # Left panel with Geant4 solid icons
+│   ├── Sidebar.Material.js # Replaces Three.js material panel
+│   ├── Sidebar.Geometry.js # Replaces Three.js geometry panel
+│   ├── TGExporter.js       # Exports scene to .tg / .mac formats
+│   ├── TGExportPanel.js    # Export preview UI panel
+│   ├── MaterialDatabaseHandler.js  # NIST material registry
+│   ├── SimpleMaterialDatabase.js   # Element data
+│   ├── CompoundMaterialDatabase.js # Compound material data
+│   ├── Storage.js          # Auto-save to local storage
+│   ├── FileDropHandler.js  # Drag-and-drop file import
+│   ├── Replacement.js      # Empty stub for disabled Three.js modules
+│   ├── Menubar.Share.js    # Share / screenshot menu entry
+│   └── ShareScreenshotPanel.js
+├── css/
+│   └── g4ui.css            # Style overrides (higher-specificity CSS)
+├── packages/
+│   └── geant4-csg/         # Workspace package: Geant4 Three.js geometries
+├── vendor/
+│   └── threejs/            # Git submodule: Three.js (never modified)
+└── vite.config.mjs         # Build config + module alias definitions
+```
+
 ## Design Philosophy
 
 If we can modify the official [three.js][] [editor][]'s behavior and appearance without changing any original files, we can clearly separate our code from the original code. This will make it easier to adapt updates to the [three.js][] [editor][] in the future.
 
 This non-destructive editor customization is possible through the following methods:
+
+### Vite Module Aliases (Module Swaps)
+
+`vite.config.mjs` intercepts specific Three.js editor module imports and redirects them to local replacements under `js/`. This is the foundational mechanism that lets us replace whole panels and disable unused modules without touching `vendor/threejs/`.
+
+- **Best for**: Replacing an entire vendor module with a custom implementation, or stubbing out modules we don't use.
+- **Implementation**: Add or modify an entry under `resolve.alias` in `vite.config.mjs`.
+
+```javascript
+// vite.config.mjs (excerpt)
+resolve: {
+  alias: [
+    // Disable unused Three.js panels by aliasing them to empty stubs
+    { find: './Sidebar.Project.js',     replacement: '.../js/Replacement.js' },
+    { find: './Viewport.Pathtracer.js', replacement: '.../js/Replacement.js' },
+
+    // Swap in Geant4-specific panels
+    { find: './Sidebar.Material.js',    replacement: '.../js/Sidebar.Material.js' },
+    { find: './Sidebar.Geometry.js',    replacement: '.../js/Sidebar.Geometry.js' },
+  ],
+}
+```
+
+`vite.config.mjs` also defines a `transform` plugin that performs targeted string rewrites on selected vendor files at build time (e.g. swapping `THREE.ObjectLoader` for `G4CSGLoader`, hiding unused menu entries, renaming "Object" → "Volume"). Treat that plugin as a load-bearing part of the customization surface — when updating the Three.js submodule, those string patterns are the first thing to re-verify.
 
 ### Global Signal Interception (Logic Hooks)
 
@@ -180,6 +235,51 @@ To prevent unformatted code from entering the repository, we use Git hooks:
 ### 3. Continuous Integration (GitHub Actions)
 
 Every Pull Request is automatically checked by a GitHub Action. If local hooks were bypassed (e.g., using `--no-verify`), the **Code Quality** check on GitHub will fail, and the PR cannot be merged until formatting is corrected.
+
+---
+
+## Contribution Recipes
+
+### Adding a New Geant4 Solid
+
+1. Implement the geometry in `packages/geant4-csg/src/geometries/`, following the existing pattern: extend `THREE.BufferGeometry`, set `this.type = 'G4Foo'`, store Geant4 parameters on `this.parameters`, and expose a static `getEditorConfig()` returning `parameters`, `validate`, and `createGeometry`. Implement `toJSON()` / `fromJSON()` for scene persistence.
+2. Export it from `packages/geant4-csg/src/index.js` (both the named export and the `GEOMETRY_CLASSES` map).
+3. Import it in `js/Leftbar.js` and add an icon entry to the `solidsShapes` array; drop a thumbnail image into `packages/geant4-csg/images/`.
+4. Add a `case` for the new `geometry.type` in `js/TGExporter.js` that produces the correct `:solid` line for the `.tg` format.
+
+### Adding a New Material Category
+
+Material data lives in three modules under `js/`:
+
+- `SimpleMaterialDatabase.js` — pure elements (Z = 1..98); the numeric ID equals the atomic number.
+- `CompoundMaterialDatabase.js` — multi-component compounds (NIST, HEP & Nuclear, Space, Bio-Chemical).
+- `MaterialDatabaseHandler.js` — aggregates both, assigns IDs within reserved ranges per category, and exposes `getElements()`, `getMaterialsByCategory()`, `getMaterial()`.
+
+To add entries, append to the appropriate database file. To add a new **category**, also extend the `CATEGORY` enum and the `ID_RANGES` map in `MaterialDatabaseHandler.js`, call `registerCategory()` for it, and add it to the category dropdown in `js/Sidebar.Material.js`.
+
+### Updating the Three.js Submodule
+
+```bash
+# Pull the latest upstream Three.js commit pinned by the submodule
+npm run sync-three
+
+# Rebuild and verify the customization patches still apply
+npm run build
+```
+
+Commit the updated submodule pointer as a dedicated pull request so the diff is easy to review. If `vite.config.mjs`'s `transform` plugin fails to find one of its string targets, that's the first place to look — upstream may have renamed or restructured the surrounding code.
+
+---
+
+## Technology Stack
+
+| Technology                                           | Role                              |
+| ---------------------------------------------------- | --------------------------------- |
+| [Vite](https://vite.dev/)                            | Build tool and dev server         |
+| [Three.js](https://threejs.org/)                     | 3D rendering and editor framework |
+| [Prettier](https://prettier.io/)                     | Code formatting                   |
+| [Husky](https://typicode.github.io/husky/)           | Git hook runner                   |
+| [lint-staged](https://github.com/okonet/lint-staged) | Pre-commit formatting             |
 
 ---
 

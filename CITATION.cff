@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: 'If you use g4web in work that leads to a publication, please cite it using the metadata below.'
+type: software
+title: 'g4web: A web-based user interface for Geant4 detector definition'
+abstract: >
+  g4web is a browser-based graphical user interface for defining detector
+  geometry for Geant4-based particle physics simulations. It is built on the
+  official Three.js Editor and extends it with Geant4-specific solid geometries,
+  NIST material assignment, and export to the Text-based Geometry format.
+repository-code: 'https://github.com/jintonic/g4web'
+url: 'https://jintonic.github.io/g4web/'
+license: AGPL-3.0
+version: '0.1.0'
+date-released: '2026-05-24'
+keywords:
+  - Geant4
+  - particle physics
+  - detector simulation
+  - web application
+  - Three.js
+  - geometry editor
+authors:
+  - family-names: Liu
+    given-names: Jing
+    orcid: 'https://orcid.org/0000-0003-1869-2407'
+  - family-names: Islam
+    given-names: Md Aftabul
+    orcid: 'https://orcid.org/0009-0007-4094-9287'
+  - family-names: Sah
+    given-names: Chitrashen
+    orcid: 'https://orcid.org/0000-0000-0000-0000'
+references:
+  - type: software
+    title: 'Three.js'
+    repository-code: 'https://github.com/mrdoob/three.js'
+    url: 'https://threejs.org'
+    authors:
+      - family-names: Cabello
+        given-names: Ricardo
+        alias: mrdoob
