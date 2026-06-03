@@ -26,7 +26,6 @@ function createSurveyPrompt() {
     <div class="g4-survey-dialog" role="dialog" aria-modal="true" aria-labelledby="g4SurveyTitle">
       <div class="g4-survey-header">
         <strong id="g4SurveyTitle">Quick survey</strong>
-        <button type="button" class="g4-survey-close" aria-label="Close">×</button>
       </div>
       <div class="g4-survey-body">
         <p class="g4-survey-copy">
@@ -34,7 +33,7 @@ function createSurveyPrompt() {
         </p>
         <div class="g4-survey-actions">
           <button type="button" class="Button" data-survey="yes">Yes</button>
-          <button type="button" class="Button" data-survey="no">No</button>
+          <button type="button" class="Button" data-survey="no">Maybe later</button>
           <button type="button" class="Button" data-survey="never">Don't show again</button>
         </div>
       </div>
@@ -69,20 +68,14 @@ function showSurveyPrompt() {
       close(choice);
     };
     const onCloseClick = () => close('dismiss');
-
-    const closeButton = overlay.querySelector('.g4-survey-close');
     const buttons = overlay.querySelectorAll('[data-survey]');
 
     function cleanup() {
-      overlay.removeEventListener('click', onOverlayClick);
       document.removeEventListener('keydown', onKeyDown, true);
-      closeButton.removeEventListener('click', onCloseClick);
       buttons.forEach((btn) => btn.removeEventListener('click', onButtonClick));
     }
 
-    overlay.addEventListener('click', onOverlayClick);
     document.addEventListener('keydown', onKeyDown, true);
-    closeButton.addEventListener('click', onCloseClick);
     buttons.forEach((btn) => btn.addEventListener('click', onButtonClick));
 
     overlay.classList.remove('hidden');
