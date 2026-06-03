@@ -1,6 +1,6 @@
 # Contributing to Geant4 Web UI
 
-Thank you for your interest in contributing! Please read the [Design Philosophy](#design-philosophy) section below to understand the recommended way to modify the code, and then follow the [Development Workflow](#development-workflow) section to make changes.
+Thank you for your interest in contributing! Start with [Getting Started](#getting-started) to run the project locally, then read [Design Philosophy](#design-philosophy) before making any code changes, and follow the [Development Workflow](#development-workflow) section for conventions.
 
 ## Architecture Overview
 
@@ -32,6 +32,65 @@ g4web/
 │   └── threejs/            # Git submodule: Three.js (never modified)
 └── vite.config.mjs         # Build config + module alias definitions
 ```
+
+## Getting Started
+
+### Prerequisites
+
+| Requirement | Minimum version | Notes                             |
+| ----------- | --------------- | --------------------------------- |
+| Node.js     | 18.x            | [nodejs.org](https://nodejs.org/) |
+| npm         | 9.x             | Bundled with Node.js              |
+| Git         | 2.x             | Must support `git submodule`      |
+
+### Installation
+
+```bash
+# 1. Clone the repository and its Three.js submodule
+git clone --recursive https://github.com/jintonic/g4web.git
+cd g4web
+
+# 2. Install dependencies
+npm install
+```
+
+> **Note:** The `--recursive` flag is required because Three.js is included as a
+> Git submodule under `vendor/threejs/`. If you already cloned without it, run:
+> `git submodule update --init --recursive`
+
+### Development Server
+
+```bash
+# Start the Vite development server with hot-reload
+npm run dev
+```
+
+Open your browser at `http://localhost:5173` (or the port printed in the terminal).
+
+To build a production bundle:
+
+```bash
+npm run build
+# Preview the built site locally
+npm run preview
+```
+
+### Verification
+
+Run the following commands to check code formatting and execute package-level tests:
+
+```bash
+# Check code formatting (Prettier)
+npm run format:check
+
+# Run tests for all workspace packages (geant4-csg)
+npm test
+
+# Verify the production build compiles without errors
+npm run build
+```
+
+See [docs/verification.md](docs/verification.md) for details on what each check covers.
 
 ## Design Philosophy
 
@@ -285,8 +344,9 @@ Commit the updated submodule pointer as a dedicated pull request so the diff is 
 
 ## Pull Request Process
 
-1. **Sync Dependencies:** Ensure all dependencies are correctly listed in `package.json` and `package-lock.json`.
-2. **Quality Check:** Verify that your code passes the Prettier check by running:
+1. **One PR per issue:** Keep pull requests scoped to a single issue or feature so reviews stay focused and history stays easy to bisect. If your work touches multiple issues, open a separate PR for each.
+2. **Sync Dependencies:** Ensure all dependencies are correctly listed in `package.json` and `package-lock.json`.
+3. **Quality Check:** Verify that your code passes the Prettier check by running:
    ```bash
    npx prettier --check .
    # or
