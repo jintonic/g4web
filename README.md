@@ -14,11 +14,6 @@ A live demo is available at **https://jintonic.github.io/g4web/**.
 - [What does g4web do?](#what-does-g4web-do)
 - [Who is it for?](#who-is-it-for)
 - [Features](#features)
-- [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Steps](#steps)
-  - [Troubleshooting](#troubleshooting)
-- [Development Setup](#development-setup)
 - [Usage](#usage)
   - [Adding a Solid](#adding-a-solid)
   - [Selecting and Moving Objects](#selecting-and-moving-objects)
@@ -29,7 +24,6 @@ A live demo is available at **https://jintonic.github.io/g4web/**.
   - [Exporting for Geant4](#exporting-for-geant4)
   - [Importing Geometry](#importing-geometry)
   - [Keyboard Shortcuts](#keyboard-shortcuts)
-- [Verification](#verification)
 - [Screenshots](#screenshots)
 - [Citation](#citation)
 - [Contributing](#contributing)
@@ -68,60 +62,6 @@ g4web is designed for:
 - File drag-and-drop import.
 - Non-destructive customization pattern — vendor (Three.js) files are never modified.
 - Deployed automatically to GitHub Pages on every push to `main`.
-
----
-
-## Installation
-
-### Prerequisites
-
-| Requirement | Minimum version | Notes                             |
-| ----------- | --------------- | --------------------------------- |
-| Node.js     | 18.x            | [nodejs.org](https://nodejs.org/) |
-| npm         | 9.x             | Bundled with Node.js              |
-| Git         | 2.x             | Must support `git submodule`      |
-
-### Steps
-
-```bash
-# 1. Clone the repository and its Three.js submodule
-git clone --recursive https://github.com/jintonic/g4web.git
-cd g4web
-
-# 2. Install dependencies
-npm install
-```
-
-> **Note:** The `--recursive` flag is required because Three.js is included as a
-> Git submodule under `vendor/threejs/`. If you already cloned without it, run:
-> `git submodule update --init --recursive`
-
-### Troubleshooting
-
-- **`git submodule` errors after cloning** — run `git submodule update --init --recursive` to populate `vendor/threejs/`.
-- **Port already in use** — Vite will pick the next available port; check the terminal output for the actual URL.
-- **`npm install` fails on Node.js < 18** — upgrade Node.js. Using [nvm](https://github.com/nvm-sh/nvm) is recommended (`nvm install 20 && nvm use 20`).
-
----
-
-## Development Setup
-
-```bash
-# Start the Vite development server with hot-reload
-npm run dev
-```
-
-Open your browser at `http://localhost:5173` (or the port printed in the terminal).
-
-To build a production bundle:
-
-```bash
-npm run build
-# Preview the built site locally
-npm run preview
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's non-destructive customization approach before making UI changes.
 
 ---
 
@@ -212,25 +152,6 @@ Drag and drop a previously exported `.json` scene file, or a supported 3D file (
 | `Ctrl+Z`       | Undo                   |
 | `Ctrl+Shift+Z` | Redo                   |
 | `Ctrl+S`       | Save to local storage  |
-
----
-
-## Verification
-
-Run the following commands to check code formatting and execute package-level tests:
-
-```bash
-# Check code formatting (Prettier)
-npm run format:check
-
-# Run tests for all workspace packages (geant4-csg)
-npm test
-
-# Verify the production build compiles without errors
-npm run build
-```
-
-See [docs/verification.md](docs/verification.md) for details on what each check covers.
 
 ---
 
