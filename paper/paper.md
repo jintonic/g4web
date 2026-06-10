@@ -8,9 +8,16 @@ tags:
   - Three.js
   - web application
 authors:
-  - name: Jing Liu
-    orcid: 0000-0003-1869-2407
-    affiliation: 1
+  - family-names: Sah
+    given-names: Chitrashen
+    orcid: 'https://orcid.org/0000-0000-0000-0000'
+  - family-names: Islam
+    given-names: Md Aftabul
+    orcid: 'https://orcid.org/0009-0007-4094-9287'
+    corresponding: true
+  - family-names: Liu
+    given-names: Jing
+    orcid: 'https://orcid.org/0000-0003-1869-2407'
 affiliations:
   - name: University of South Dakota
     index: 1
