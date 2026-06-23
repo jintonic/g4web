@@ -3,9 +3,9 @@
 [![Deploy to GitHub Pages](https://github.com/jintonic/g4web/actions/workflows/deploy.yml/badge.svg)](https://github.com/jintonic/g4web/actions/workflows/deploy.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
-**g4web** is a browser-based graphical user interface for defining detector geometry for [Geant4](https://geant4.web.cern.ch)-based particle physics simulations. It is built on top of the official [Three.js Editor](https://threejs.org/editor/) and extends it with Geant4-specific solid geometries, material assignment, and geometry export to the Text-based Geometry (TG) format accepted by [GEARS](https://github.com/jintonic/gears).
+**g4web** is a browser-based graphical user interface for defining detector geometry for [Geant4](https://geant4.web.cern.ch)-based particle physics simulations. It is built on top of the official [Three.js Editor](https://threejs.org/editor/) and extends it with Geant4-specific solid geometries, material assignment, and geometry export to the Text-based Geometry (TG) format accepted by two universal Geant4 applications, [GEARS](https://github.com/jintonic/gears) and [MinGLE](https://github.com/jintonic/mingle).
 
-A live demo is available at **https://jintonic.github.io/g4web/**.
+G4Web is live at **https://physino.xyz/g4web/**.
 
 ---
 
@@ -27,6 +27,7 @@ A live demo is available at **https://jintonic.github.io/g4web/**.
 - [Screenshots](#screenshots)
 - [Citation](#citation)
 - [Contributing](#contributing)
+- [Package](#package)
 - [License](#license)
 
 ---
@@ -186,6 +187,12 @@ See [CITATION.cff](CITATION.cff) for machine-readable citation metadata.
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — this project uses a non-destructive customization pattern to keep vendor (Three.js) files pristine.
 
 For bug reports and feature requests, use the [GitHub issue tracker](https://github.com/jintonic/g4web/issues).
+
+---
+
+## Package
+
+For those who want to build on top of g4web, the package is published on <https://www.npmjs.com/package/@physino/g4web>.
 
 ---
 
